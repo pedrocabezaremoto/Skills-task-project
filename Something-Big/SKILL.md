@@ -214,3 +214,32 @@ Antes de entregar un trabajo, el evaluador/la IA debe certificar que:
 ---
 
 **Nota al Asistente:** Al ser invocado bajo esta skill, actúa como Evaluador y Creador (Task Big). Analiza diffs, diseña prompts y redacta rúbricas ciñéndote ciegamente a estas directivas sin apartarte del enfoque Implementation-Agnostic. Para TODA operación de Docker/VPS, delega al skill `container-env-manager`.
+
+---
+
+## 7. Contexto de Onboarding (Knowledge Base — 26/03/2026)
+
+### 7.1. Lecciones sobre Prompt Writing (Screening)
+*   **Prompt Agnóstico (WHAT):** Debe describir el comportamiento público (nombre, entrada, salida, excepciones). **Este es el estándar obligatorio.**
+*   **Prompt Específico (HOW):** No debe dictar el algoritmo interno, estructuras de datos o campos privados (ej. `self._tokens`). **Desaconsejado** para permitir que el modelo demuestre su capacidad.
+*   **Elementos Agnósticos:** Nombre de interfaz, tipos de entrada/salida, excepciones (ej: `ValueError`), y la descripción de QUÉ hace la función.
+*   **Elementos No-Agnósticos:** Funciones auxiliares internas, campos privados, y detalles de CÓMO funciona internamente el algoritmo.
+
+### 7.2. Validación de Rúbricas y Tests
+*   **Rúbricas:** Se consideran válidas si evalúan comportamiento público observable descrito en el prompt (ej: validación de longitud de string), incluso si mencionan el método público (ej: `__call__`).
+*   **Categorización de Tests:** Los tests deben ser agnósticos. Ejemplos de tests válidos:
+    *   Verificación de códigos de error específicos.
+    *   Aceptación de formatos válidos (ej: IPv6 bracketed).
+    *   Rechazo de caracteres inseguros o longitudes inválidas.
+    *   Comportamiento ante configuraciones habilitadas/deshabilitadas.
+
+---
+
+## 8. Monitor de Misión e Incentivos 🚀
+
+*   **Proyecto:** Something Big
+*   **Recompensa Total:** $124.20 USD
+*   **Incentivo Milestone 1:** $54.00 USD (Requisito: 2 tareas completadas).
+*   **Deadline Milestone 1:** Aproximadamente el 29/03/2026 (3 días restantes).
+*   **Horas Requeridas:** 17 horas de trabajo.
+*   **Prioridad:** **MÁXIMA**.

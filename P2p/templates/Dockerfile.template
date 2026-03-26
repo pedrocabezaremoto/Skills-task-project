@@ -1,0 +1,55 @@
+# Dockerfile Template — Hawkins Experiments
+# ⚠️ Secciones marcadas con "DO NOT MODIFY" son OBLIGATORIAS
+
+# ============================================
+# TODO: Elegir imagen base según el proyecto
+# Opciones: python:3.10-slim | node:20-slim | ubuntu:22.04
+# ============================================
+FROM python:3.10-slim
+
+# ============================================
+# DO NOT MODIFY — Directorio de trabajo fijo
+# ============================================
+RUN mkdir /app
+WORKDIR /app
+
+# ============================================
+# TODO: Instalar dependencias del sistema
+# ============================================
+RUN apt-get update && apt-get install -y \
+    git \
+    python3 \
+    python3-pip \
+    python3-setuptools \
+    python-is-python3 \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# ============================================
+# TODO: Clonar repositorio y fijar commit
+# REGLA: Usar SHA del commit padre, NUNCA branch name
+# ============================================
+RUN git clone <REPO_URL> /app/repo
+WORKDIR /app/repo
+RUN git checkout <PARENT_COMMIT_SHA>
+# RUN git submodule update --init --recursive  # Descomentar si el repo tiene submódulos
+
+# ============================================
+# TODO: Instalar dependencias del proyecto
+# REGLA: Instalar TODAS las librerías necesarias
+# ============================================
+# RUN pip install -r requirements.txt
+# RUN npm install
+# RUN cargo build
+
+# ============================================
+# DO NOT MODIFY — Punto de entrada fijo
+# ============================================
+ENTRYPOINT ["/bin/bash"]
+
+# ============================================
+# ❌ PROHIBIDO usar COPY para estos archivos:
+#    - run_script.sh
+#    - reproduction_script.sh
+#    - golden.patch
+#    - parsing.py
+# ============================================

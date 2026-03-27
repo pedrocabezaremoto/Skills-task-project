@@ -5,6 +5,11 @@ Implementa la metodología Fail-to-Pass (F2P) para proyectos de Outlier Real Cod
 
 ---
 
+## 📚 Base de Conocimiento (Onboarding)
+- [Informe Completo Onboarding (26/03/2026)](./onboarding_report.md) — Resumen de respuestas, conceptos F2P, reglas de Docker y anti-patrones QC.
+
+---
+
 ## 📐 Arquitectura del Módulo
 
 ```

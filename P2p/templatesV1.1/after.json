@@ -1,0 +1,10 @@
+{
+  "status": "PASSED",
+  "tests": [
+    {
+      "name": "test_performance_bottleneck",
+      "status": "passed",
+      "message": ""
+    }
+  ]
+}

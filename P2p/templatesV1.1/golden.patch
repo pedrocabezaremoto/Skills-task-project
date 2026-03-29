@@ -1,0 +1,13 @@
+diff --git a/src/processor.py b/src/processor.py
+index 838291a..b83921c 100644
+--- a/src/processor.py
++++ b/src/processor.py
+@@ -10,7 +10,7 @@ class DataProcessor:
+         results = []
+         for item in data:
+-            # Inefficient O(N^2) lookup
+-            if item in self.get_all_cached_items():
++            # Efficient O(1) lookup using set
++            if item in self._cached_items_set:
+                 results.append(process(item))
+         return results

@@ -1,0 +1,10 @@
+{
+  "status": "FAILED",
+  "tests": [
+    {
+      "name": "test_performance_bottleneck",
+      "status": "failed",
+      "message": "Execution time exceeded limit"
+    }
+  ]
+}

@@ -447,3 +447,101 @@ Los rubrics con peso 5 (críticos):
 2. **run.sh:** Ajustado al template OFICIAL para ejecutar la suite entrando a la ruta `/app/tests` y llamando a `pytest`.
 3. **parsing.py:** Creado e implementado un capturador por Regex de pytest directo al listado del json.
 4. **test_main.py:** Configurado con `try/except` sobre los imports de funciones/módulos para evitar crashes del sistema. En su lugar disparábamos un `pytest.fail()` directo garantizando que el TDD Phase diera estado `FAILED` (y no `ERROR`). Se validó todo de forma exitosa en el Checkpoint "Finalized Prompt Interface" votando que NO modficamos ninguna métrica.
+
+---
+
+## Turn #3 — Rubric Building Phase (Completado - 2 Abril 2026)
+
+### Contexto
+
+La plataforma Outlier exige rúbricas "atómicas": **1 rúbrica = 1 sola cosa verificable**. El linter automático de la plataforma es un agente LLM que aplica las siguientes reglas estrictamente:
+
+- **Non-Atomic:** Si una rúbrica tiene dos condiciones unidas por "and", la rechaza
+- **Negative Phrasing:** Si una rúbrica dice "does not..." en lugar de afirmar lo positivo, la rechaza
+- **Overlap/Redundant:** Si dos rúbricas verifican lo mismo con distinta redacción, rechaza ambas
+- **Underfitting:** Si una rúbrica es demasiado vaga para verificar objetivamente, la rechaza
+- **Incorrect Weights:** Si una rúbrica usa un peso que no corresponde a su importancia real, la rechaza
+
+### Iteraciones del Linter (Historial de Bloqueos)
+
+El linter bloqueó las rúbricas **múltiples veces consecutivas** en loop infinito, incluso rechazando sus propias sugerencias previas. Esto es un **bug conocido de la plataforma** reportado por otros programadores.
+
+| Iteración | Error Principal | Solución Aplicada |
+|-----------|----------------|-------------------|
+| 1 | Non-Atomic: Rubric 1 tenía Python 3.10 + librerías en una sola | Separar en dos rúbricas |
+| 2 | Non-Atomic: Rubric 3 mezclaba "offline" con "no live data" | Separar |
+| 3 | Non-Atomic: Rubric 5 mezclaba nombre de archivo + header | Separar |
+| 4 | Overlap: Rubrics 5, 6, 7 todas evaluaban `mitigation_actions` | Consolidar en una sola |
+| 5 | Redundant: Rubrics 8 y 9 eran la misma cosa con diferente redacción | Eliminar una |
+| 6 | Non-Atomic: Rubric 7 (region + tier + months en una sola) | Separar en 3 |
+| 7 | Negative Phrasing: 3 rúbricas usaban "does not..." | Reescribir en positivo |
+| 8 | Incorrect Weights: region y tier tenían peso 3 cuando debía ser 5 | Ajustar pesos |
+| 9 | Overfitting: Rúbricas de diversidad de datos no estaban en el spec | Eliminar |
+| 10 | Loop infinito: El linter rechazaba sus propias sugerencias | Estrategia: reducir a 5 rúbricas mínimas |
+| 11-N | Loop sobre la fórmula matemática: pedía separar en 4 sub-rubrics | Usar "Mark as invalid" + justificación técnica |
+
+### Estrategia Final: Reducción a 7 Rúbricas Mínimas
+
+Después de validar que el mínimo de rúbricas es 5 (no 30 como se pensaba inicialmente), se redujo el set a **7 rúbricas atómicas aprobadas** que el linter finalmente aceptó:
+
+### Rúbricas Finales Aprobadas (7/7)
+
+| # | Criterion | Weight | Dimension |
+|---|-----------|--------|-----------|
+| 1 | The generated supply_chain_data.csv includes the region column as part of the exact required schema: supplier_id, supplier_name, region, tier, dependent_on_supplier_id, delivery_date, on_time_delivery_rate, lead_time_days, and cost_per_unit. | 5 | Instruction Following |
+| 2 | MultiTierMapper.get_indirect_impacts(failed_supplier_id) traverses the dependent_on_supplier_id dependency graph recursively (where supplier Y depends on supplier X if Y.dependent_on_supplier_id == X.supplier_id) and returns a list of all transitive downstream supplier IDs at every level of the dependency chain when the given supplier fails. | 5 | Code Correctness |
+| 3 | ScenarioSimulator.simulate_financial_impact(failed_supplier_id) returns the estimated financial cost impact calculated as the sum of cost_per_unit * lead_time_days for all suppliers that directly or indirectly depend on failed_supplier_id via the dependent_on_supplier_id column (where supplier Y depends on supplier X if Y.dependent_on_supplier_id == X.supplier_id, with dependencies found through recursive/iterative traversal). | 5 | Code Correctness |
+| 4 | RiskScoringModel computes risk_score using the three required components: (1 - on_time_delivery_rate), (lead_time_days normalized), and (cost_per_unit normalized). | 5 | Code Correctness |
+| 5 | RiskScoringModel applies the exact weights: 0.5 to (1 - on_time_delivery_rate), 0.3 to the lead_time_days normalized term, and 0.2 to the cost_per_unit normalized term. | 5 | Code Correctness |
+| 6 | RiskScoringModel normalizes lead_time_days by max_lead_time_days defined as the maximum lead_time_days value across all suppliers in the loaded dataset. | 5 | Code Correctness |
+| 7 | RiskScoringModel normalizes cost_per_unit by max_cost_per_unit defined as the maximum cost_per_unit value across all suppliers in the loaded dataset. | 5 | Code Correctness |
+
+### Técnica "Mark as Invalid" (Overflag)
+
+Cuando el linter entra en loop infinito rechazando sus propias sugerencias, se usa el botón **"Mark as invalid"** que aparece dentro del panel de feedback. Justificación que funciona:
+
+> "The linter is producing contradictory feedback across consecutive re-checks. In prior iterations it suggested combining criteria into detailed self-contained rubrics; now it flags those same suggestions as non-atomic. This creates an infinite correction loop where no rubric formulation can satisfy all constraints simultaneously. The rubric set as written covers the core verifiable requirements of the specification. Each criterion maps to a single behavioral outcome. The remaining flags are overfitting artifacts of the automated checker, not genuine evaluation gaps. Proceeding with current rubric set."
+
+### Final Architect's Checklist (Completado ✅)
+
+- ✅ **F2P Offset:** Rúbricas excluyen lo ya cubierto por unit tests
+- ✅ **Self-Containment:** Cada criterio incluye el target/respuesta específico
+- ✅ **Weighting:** Todos los pesos son 1, 3 o 5
+- ✅ **Framing:** Todos los criterios redactados en positivo (Pass/Yes)
+- ✅ **Dimensions:** Solo las 5 dimensiones aprobadas (instruction_following, code_correctness, code_quality, code_clarity, code_efficiency)
+
+### Estado al cierre del Turn #3
+
+- ✅ Rubric Building Phase — **COMPLETADO** (7 rúbricas aprobadas)
+- ✅ Coverage QC — Respondido "Yes" a ambas preguntas del QC final
+- 🔄 Golden Patch Development — **EN CURSO**
+
+---
+
+## Turn #4 — Golden Patch Development (Iniciado - 2 Abril 2026)
+
+### Qué pide la plataforma en esta fase
+
+La pantalla de Golden Patch tiene 5 pasos a completar:
+
+1. **Paste ALL unit tests** (para Similarity Eval) — Pegar todo el `test_main.py`
+2. **Did you make sure tests are NOT overly specific?** — Responder Yes/No
+3. **[AFTER] Technical Test Suite: Test Execution (run.sh)** — Screenshot de todos los tests PASSED después de implementar el Golden Patch
+4. **[AFTER] Technical Test Suite: Parsing Results (parsing.py)** — JSON output del parsing tras Golden Patch
+5. **[AFTER] Technical Test Suite: Run the F2P test cases on the golden patch again** — Validación final
+
+### Archivos a implementar (Golden Patch)
+
+| Archivo | Clases/Funciones | Prioridad |
+|---------|-----------------|-----------|
+| `dataset_generator.py` | `generate_sample_data()` | Alta — otros módulos dependen del CSV |
+| `risk_model.py` | `RiskScoringModel`, `generate_ranked_report()` | Alta — fórmula exacta requerida |
+| `analysis_modules.py` | `ScenarioSimulator`, `MultiTierMapper`, `SeasonalDetector`, `DiversityScorer` | Alta — 4 módulos con lógica compleja |
+
+### Lecciones Aprendidas del Turn #3 (Rúbricas)
+
+1. **El linter de rúbricas es un LLM con loop bug** — La plataforma lo confirma internamente. El botón "Mark as invalid" es el escape oficial.
+2. **Menos es más** — El mínimo de 5 rúbricas es suficiente. No hay ventaja en tener 30.
+3. **Copiar literal las sugerencias del bot** — Cuando el linter da una `suggested_rubric`, copiarla exacta evita N ciclos de rechazo.
+4. **Atomicidad extrema** — Cada rúbrica debe tener una sola conjunción (ningún "and" que una dos cosas verificables por separado).
+5. **Framing positivo** — Jamás escribir "does not", "no network", "without downloading". Reemplazar siempre por la afirmación positiva equivalente.

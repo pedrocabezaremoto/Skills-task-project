@@ -269,11 +269,11 @@ Empty repository with test files only.
 
 - ✅ Turn #1 (Prompt) — Completado y pegado en Outlier
 - ✅ Linter 1: Determinism Check — PASS (palabra "recommended" → "specific", fórmula de risk_score definida)
-- ✅ Linter 2: Expected Interface Eval — PASS (todos los módulos documentados con 6 campos)
-- ✅ Linter 3: Logic Problems — FLAGS IGNORADOS (todos eran Architectural Feasibility y Seed Alignment — tipo ignorable según instrucciones de plataforma)
-- ✅ Move On completado — Avanzó a sección "Expected Interface Eval"
-- 🔄 Expected Interface Eval — EN CURSO (plataforma auditando Expected Interface automáticamente, loading...)
-- ⏳ Turn #2 (F2P Tests) — Pendiente
+- ✅ Linter 2: Expected Interface Eval (1) — FAIL (Falta fórmula y descripciones exactas de mitigación) → **Corregido**
+- ✅ Linter 3: Linter Re-check — FAIL (Trampa de alcance abierto "at least one") → **Corregido** a "exactly two".
+- ✅ Linter 4: Expected Interface Eval (2) — FAIL (Artifacts de Markdown en las rutas como `[generator.py]`) → **Overflag ignorado**
+- ✅ Linter 5: Logical Flaw Checkpoint — PASS (Score 90). Tuvo 2 advertencias (Signal-to-Message Mismatch por granularidad y Seed Alignment por scikit-learn) pero al ser PASS permitieron avanzar.
+- 🔄 Turn #2 (F2P Tests) — **EN CURSO** (Esperando iniciar la creación de pruebas unitarias).
 - ⏳ Turn #3 (Rúbricas) — Pendiente
 - ⏳ Turn #4 (Golden Patch) — Pendiente
 - ⏳ Validación F2P (before.json / after.json) — Pendiente
@@ -281,28 +281,15 @@ Empty repository with test files only.
 
 ---
 
-## Sección Actual — Expected Interface Eval
+## Iteraciones del Evaluador de la Plataforma (Detalle 1 Abril)
 
-### Qué es esta sección
-La plataforma corre un "Reasoning Trace" automático que audita la sección Expected Interface del prompt contra la descripción original de la tarea. Verifica que cada componente público requerido esté documentado.
-
-### Lo que se vio en pantalla
-- El sistema identificó correctamente los componentes:
-  1. `dataset_generator.py` → `generate_sample_data`
-  2. `risk_model.py` → `RiskScoringModel` + `generate_ranked_report`
-  3. `analysis_modules.py` → `ScenarioSimulator`, `MultiTierMapper`, `SeasonalDetector`, `DiversityScorer`
-- Pregunta al usuario: *"Did you make sure to update your prompts based on the flags / make sure they are overflags only?"*
-- El usuario debe responder **Yes** y luego click en **Next**
-
-### Iteraciones del Linter (historial completo)
-
-| Ronda | Score | Acción tomada |
-|---|---|---|
-| 1 | Determinism: FAIL (40) | Fix: "recommended"→"specific", fórmula risk_score agregada |
-| 2 | Logic: FAIL (72), Interface: 1 violación | Fix: módulo cost impact fusionado con ScenarioSimulator |
-| 3 | Logic: FAIL (74) | Solo Feasibility flags → ignorados |
-| 4 | Logic: FAIL (72) | Solo Feasibility flags → Mark as invalid + Move On |
-| Final | Expected Interface Eval | En curso — loading |
+1. **Expected Interface (Misleading Description):** El linter notó que faltaba la fórmula matemática del Score y los 2 tipos de mitigación requeridos por el usuario en `generate_ranked_report`. Se corrigió inyectando eso en la descripción.
+2. **Open-Ended Scope Trap ("at least one"):** El linter detectó como crítico pedir "al menos una" acción de mitigación porque rompía la regla de determinismo (el LLM podía generar 1 o 50). Se corrigió pidiendo **"exactly two"**.
+3. **Markdown Link Artifacts en Paths (Overflag):** El editor de la plataforma auto-formateaba `.py` como enlaces (ej. `dataset_[generator.py](http...)`). Esto provocó un FAIL masivo en la interfaz. Se marcó como **Overflag** respondiendo "Yes" a ignorarlo.
+4. **Logical Flaw Checkpoint (PASS 90/100):** 
+   - *Data Granularity:* El CSV para `SeasonalDetector` requiere muchas filas, pero el `risk_score` asume 1 fila por proveedor.
+   - *Seed Alignment:* Se pide `scikit-learn` en el stack pero se usó una fórmula determinista pesada (hardcoded) en lugar de un modelo entrenado.
+   - **Veredicto:** A pesar de los warnings, el estado dio **PASS**, lo que permite continuar sin reescribir todo (son mejoras sugeridas).
 
 ---
 
@@ -311,8 +298,8 @@ La plataforma corre un "Reasoning Trace" automático que audita la sección Expe
 1. **Estilo del prompt** — Siempre en primera persona como cliente freelance, nunca dirigirse al agente directamente
 2. **Expected Interface** — Todo módulo mencionado en Key Requirements DEBE tener su entrada en Expected Interface con los 6 campos
 3. **Fórmulas explícitas** — Cualquier cálculo que devuelva un número debe tener la fórmula escrita en la descripción
-4. **Criterios cuantitativos** — Términos como "high risk" o "over-reliance" DEBEN tener un umbral numérico específico
-5. **Traversal depth** — Cuando hay estructuras de dependencias, especificar si el recorrido es superficial o recursivo
+4. **Determinismo Lingüístico** — Jamás usar frases como "at least one" o "or". Todo debe ser exacto (ej. "exactly two").
+5. **Overflags** — El editor de la plataforma puede corromper texto convirtiendo `.py` en hipervínculos. Marcar siempre como overflag si lógicamente tu path era correcto.
 6. **Tech Stack con versiones** — Siempre incluir versión exacta de cada librería
 
 ---

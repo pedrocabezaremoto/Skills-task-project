@@ -268,11 +268,41 @@ Empty repository with test files only.
 ## Estado Actual de la Tarea
 
 - ✅ Turn #1 (Prompt) — Completado y pegado en Outlier
+- ✅ Linter 1: Determinism Check — PASS (palabra "recommended" → "specific", fórmula de risk_score definida)
+- ✅ Linter 2: Expected Interface Eval — PASS (todos los módulos documentados con 6 campos)
+- ✅ Linter 3: Logic Problems — FLAGS IGNORADOS (todos eran Architectural Feasibility y Seed Alignment — tipo ignorable según instrucciones de plataforma)
+- ✅ Move On completado — Avanzó a sección "Expected Interface Eval"
+- 🔄 Expected Interface Eval — EN CURSO (plataforma auditando Expected Interface automáticamente, loading...)
 - ⏳ Turn #2 (F2P Tests) — Pendiente
 - ⏳ Turn #3 (Rúbricas) — Pendiente
 - ⏳ Turn #4 (Golden Patch) — Pendiente
 - ⏳ Validación F2P (before.json / after.json) — Pendiente
 - ⏳ Submit final — Pendiente
+
+---
+
+## Sección Actual — Expected Interface Eval
+
+### Qué es esta sección
+La plataforma corre un "Reasoning Trace" automático que audita la sección Expected Interface del prompt contra la descripción original de la tarea. Verifica que cada componente público requerido esté documentado.
+
+### Lo que se vio en pantalla
+- El sistema identificó correctamente los componentes:
+  1. `dataset_generator.py` → `generate_sample_data`
+  2. `risk_model.py` → `RiskScoringModel` + `generate_ranked_report`
+  3. `analysis_modules.py` → `ScenarioSimulator`, `MultiTierMapper`, `SeasonalDetector`, `DiversityScorer`
+- Pregunta al usuario: *"Did you make sure to update your prompts based on the flags / make sure they are overflags only?"*
+- El usuario debe responder **Yes** y luego click en **Next**
+
+### Iteraciones del Linter (historial completo)
+
+| Ronda | Score | Acción tomada |
+|---|---|---|
+| 1 | Determinism: FAIL (40) | Fix: "recommended"→"specific", fórmula risk_score agregada |
+| 2 | Logic: FAIL (72), Interface: 1 violación | Fix: módulo cost impact fusionado con ScenarioSimulator |
+| 3 | Logic: FAIL (74) | Solo Feasibility flags → ignorados |
+| 4 | Logic: FAIL (72) | Solo Feasibility flags → Mark as invalid + Move On |
+| Final | Expected Interface Eval | En curso — loading |
 
 ---
 

@@ -273,10 +273,9 @@ Empty repository with test files only.
 - ✅ Linter 3: Linter Re-check — FAIL (Trampa de alcance abierto "at least one") → **Corregido** a "exactly two".
 - ✅ Linter 4: Expected Interface Eval (2) — FAIL (Artifacts de Markdown en las rutas como `[generator.py]`) → **Overflag ignorado**
 - ✅ Linter 5: Logical Flaw Checkpoint — PASS (Score 90). Tuvo 2 advertencias (Signal-to-Message Mismatch por granularidad y Seed Alignment por scikit-learn) pero al ser PASS permitieron avanzar.
-- 🔄 Turn #2 (F2P Tests) — **EN CURSO** (Infraestructura TDD definida. Pendiente: escribir test_main.py, correr en empty codebase, subir screenshots).
-- ⏳ Turn #3 (Rúbricas) — Pendiente
-- ⏳ Turn #4 (Golden Patch) — Pendiente
-- ⏳ Validación F2P (before.json / after.json) — Pendiente
+- ✅ Turn #2 (F2P Tests) — Completado. Se re-escribió `test_main.py` blindada para evitar Exceptions en codebase vacío y escupir FAILED. Se limpió `run.sh`, se ajustó JSON output y superamos check final sin errores críticos de linter.
+- 🔄 Turn #3 y #4 (Rúbricas / Golden Patch) — EN CURSO. Listos para programar el código base.
+- ⏳ Validación F2P (after.json) — Pendiente
 - ⏳ Submit final — Pendiente
 
 ---
@@ -439,3 +438,12 @@ Los rubrics con peso 5 (críticos):
 - `guia8_errores_comunes_correccion.md` — Errores comunes en prompts y Expected Interface
 - `promptchecker.md` — Checklist de revisión de prompts
 - `master_guide.md` — Referencia consolidada G1-G9
+
+---
+
+## Log de Acciones de Programación (Turn #2 Completado - 1 Abril)
+
+1. **Dockerfile:** Creado bajo reglas estrictas (solo comandos `RUN pip install [...]` sin `COPY`).
+2. **run.sh:** Ajustado al template OFICIAL para ejecutar la suite entrando a la ruta `/app/tests` y llamando a `pytest`.
+3. **parsing.py:** Creado e implementado un capturador por Regex de pytest directo al listado del json.
+4. **test_main.py:** Configurado con `try/except` sobre los imports de funciones/módulos para evitar crashes del sistema. En su lugar disparábamos un `pytest.fail()` directo garantizando que el TDD Phase diera estado `FAILED` (y no `ERROR`). Se validó todo de forma exitosa en el Checkpoint "Finalized Prompt Interface" votando que NO modficamos ninguna métrica.

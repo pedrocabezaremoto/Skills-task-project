@@ -545,3 +545,72 @@ La pantalla de Golden Patch tiene 5 pasos a completar:
 3. **Copiar literal las sugerencias del bot** — Cuando el linter da una `suggested_rubric`, copiarla exacta evita N ciclos de rechazo.
 4. **Atomicidad extrema** — Cada rúbrica debe tener una sola conjunción (ningún "and" que una dos cosas verificables por separado).
 5. **Framing positivo** — Jamás escribir "does not", "no network", "without downloading". Reemplazar siempre por la afirmación positiva equivalente.
+
+---
+
+## Log de Acciones de Programación (Turn #4 Completado - 2 Abril 2026)
+
+### Golden Patch — Archivos Implementados
+
+Los 3 archivos se crearon en `/app/tests/` (misma carpeta que `test_main.py` para que los imports funcionen):
+
+**`dataset_generator.py`**
+- Función `generate_sample_data()` sin argumentos, devuelve None
+- Genera `supply_chain_data.csv` con 9 columnas exactas del spec
+- 7 proveedores × 12 meses × 2 registros = 168 filas
+- Usa `numpy.random.default_rng(42)` para determinismo
+- Cadenas de dependencia: S005→S003→S001 (depth=2), S007→S006
+- 3 regiones: Asia, Europe, Americas
+
+**`risk_model.py`**
+- Clase `RiskScoringModel(data_path: str)`
+- Agrega por `supplier_id` con `.mean()` antes de calcular score
+- Fórmula exacta: `risk_score = 0.5*(1-OTR) + 0.3*(lead/max_lead) + 0.2*(cost/max_cost)`
+- `mitigation_actions` tiene exactamente 2 strings (safety stock + alternative supplier)
+- Report ordenado descendente por `risk_score`
+
+**`analysis_modules.py`**
+- `ScenarioSimulator`: BFS iterativo con visited-set para encontrar todos los dependientes transitivos, luego suma `cost_per_unit * lead_time_days`
+- `MultiTierMapper`: mismo BFS para `get_indirect_impacts`, devuelve `list[str]`
+- `SeasonalDetector`: parsea `delivery_date` a mes, compara avg mensual vs global avg OTR
+- `DiversityScorer`: `flag_over_reliance(threshold)` usa `drop_duplicates` por supplier_id antes de calcular concentración por región
+
+### Fix crítico a run.sh
+
+El `pip install` fallaba con `set -e` en entorno externally-managed. Fix:
+```bash
+pip install --quiet pytest pandas numpy scikit-learn --break-system-packages 2>/dev/null || true
+```
+
+### Resultado Final: 20/20 PASSED ✅
+
+```
+20 passed in 0.82s
+```
+
+### Pasos completados en plataforma Turn #4
+
+| Paso | Estado | Detalle |
+|------|--------|---------|
+| Paste ALL unit tests (Similarity Eval) | ✅ | test_main.py pegado completo |
+| Tests NOT overly specific? | ✅ | Respondido Yes |
+| [AFTER] Test Execution screenshot | ✅ | Screenshot 20/20 PASSED subido |
+| [AFTER] Parsing Results JSON | ✅ | after.json con 20 PASSED subido |
+| tests.zip upload | ✅ | 4 archivos: test_main.py + 3 implementaciones |
+| Before vs After check | ✅ | STATUS: IDENTICAL — respondido Yes |
+| Rubric Criteria Rating | ✅ | 7/7 "Fully meets criterion" — 100% — 1st place |
+| Validation Script (before.json) | ✅ | 20 tests FAILED subido |
+| Validation Script (after.json) | ✅ | 20 tests PASSED subido |
+| [DONE WITH GOLDEN PATCH] | 🔄 | En curso — subiendo codebase.zip y archivos finales |
+
+### Archivos generados en el VPS
+
+| Archivo | Ruta | Descripción |
+|---------|------|-------------|
+| dataset_generator.py | /app/tests/ | Golden Patch — generador CSV |
+| risk_model.py | /app/tests/ | Golden Patch — modelo de riesgo |
+| analysis_modules.py | /app/tests/ | Golden Patch — 4 módulos analíticos |
+| tests.zip | /app/ y /root/ | Suite de tests para subir a Outlier |
+| codebase.zip | /app/ | Golden Patch comprimido |
+| before.json | /root/ | 20 tests FAILED (codebase vacío) |
+| after.json | /root/ | 20 tests PASSED (con Golden Patch) |

@@ -1,0 +1,84 @@
+{
+  "tests": [
+    {
+      "name": "test_req01_generate_sample_data_signature",
+      "status": "FAILED"
+    },
+    {
+      "name": "test_req02_generates_csv_file",
+      "status": "FAILED"
+    },
+    {
+      "name": "test_req03_csv_exact_columns",
+      "status": "FAILED"
+    },
+    {
+      "name": "test_req04_csv_has_data",
+      "status": "FAILED"
+    },
+    {
+      "name": "test_req09_risk_model_class",
+      "status": "FAILED"
+    },
+    {
+      "name": "test_req10_risk_model_loads_csv",
+      "status": "FAILED"
+    },
+    {
+      "name": "test_req11_17_ranked_report_format",
+      "status": "FAILED"
+    },
+    {
+      "name": "test_req18_risk_score_calculation",
+      "status": "FAILED"
+    },
+    {
+      "name": "test_req19_ranked_report_sorted",
+      "status": "FAILED"
+    },
+    {
+      "name": "test_req20_scenario_simulator_instantiable",
+      "status": "FAILED"
+    },
+    {
+      "name": "test_req21_simulate_financial_impact_returns_float",
+      "status": "FAILED"
+    },
+    {
+      "name": "test_req24_multitier_mapper_instantiable",
+      "status": "FAILED"
+    },
+    {
+      "name": "test_req25_get_indirect_impacts",
+      "status": "FAILED"
+    },
+    {
+      "name": "test_req29_seasonal_detector_instantiable",
+      "status": "FAILED"
+    },
+    {
+      "name": "test_req30_get_high_risk_months_returns_list_int",
+      "status": "FAILED"
+    },
+    {
+      "name": "test_req33_diversity_scorer_instantiable",
+      "status": "FAILED"
+    },
+    {
+      "name": "test_req34_flag_over_reliance",
+      "status": "FAILED"
+    },
+    {
+      "name": "test_req39_csv_multiple_tiers",
+      "status": "FAILED"
+    },
+    {
+      "name": "test_req40_csv_dependency_depth",
+      "status": "FAILED"
+    },
+    {
+      "name": "test_req42_csv_multiple_regions",
+      "status": "FAILED"
+    }
+  ]
+}

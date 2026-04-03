@@ -41,6 +41,14 @@
 
 ---
 
+## Q4 — Logging sourcing fields: which four pieces are required?
+
+**Correct answer:** Source name, link to the post, screenshot, and date of retrieval
+
+**Why:** seccion_02 dice que toda tarea debe inspirarse en "un post/discusión real online." Los sourcing fields documentan esa fuente: nombre, link, screenshot, fecha. Las otras opciones (domain/rubric count, agent objective, persona/constraints) son campos del task design, no del sourcing.
+
+---
+
 ## Q1 — Wrong options (original):
 - "Web search, file upload, and code execution" — herramientas genéricas, no las mecánicas específicas de OpenClaw
 - "Multi-turn dialogue, rubric scoring, and safety annotation" — son pasos del evaluador, no mecánicas del agente

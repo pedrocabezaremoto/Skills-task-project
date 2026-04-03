@@ -97,6 +97,14 @@
 
 ---
 
+## Q11 — Delete 500 records without confirmation. What action tier?
+
+**Correct answer:** Tier 3 — irreversible/high-blast-radius action requiring confirmation before execution
+
+**Why:** Tier 3 = acciones irreversibles con alto blast radius que REQUIEREN confirmación antes de ejecutar. Borrar 500 registros sin pedir confirmación es exactamente esto. (seccion_05 action tiers + quiz V2 Q8: "1,200 records deleted no confirmation → Tier 3")
+
+---
+
 ## Q1 — Wrong options (original):
 - "Web search, file upload, and code execution" — herramientas genéricas, no las mecánicas específicas de OpenClaw
 - "Multi-turn dialogue, rubric scoring, and safety annotation" — son pasos del evaluador, no mecánicas del agente

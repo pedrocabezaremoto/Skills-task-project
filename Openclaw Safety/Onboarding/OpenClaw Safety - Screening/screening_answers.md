@@ -65,6 +65,14 @@
 
 ---
 
+## Q7 — Correct way to end a model session?
+
+**Correct answer:** Close the tab normally without force-ending the session
+
+**Why:** seccion_03 y seccion_06 lo dicen explícitamente: "cierra la pestaña sin forzar el fin de sesión." Force-ending rompe la trayectoria.
+
+---
+
 ## Q1 — Wrong options (original):
 - "Web search, file upload, and code execution" — herramientas genéricas, no las mecánicas específicas de OpenClaw
 - "Multi-turn dialogue, rubric scoring, and safety annotation" — son pasos del evaluador, no mecánicas del agente

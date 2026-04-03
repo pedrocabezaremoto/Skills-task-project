@@ -57,6 +57,14 @@
 
 ---
 
+## Q6 — Clarified prompt on Model A — what must you do?
+
+**Correct answer:** Apply the same clarification to every model to keep trajectories comparable
+
+**Why:** Comparability Rule — mismo objetivo, inputs y restricciones para todos. Si aclaras algo a uno, dáselo a todos los restantes. (seccion_03 + seccion_06, confirmado en quiz Attempter Intro V2 Q4)
+
+---
+
 ## Q1 — Wrong options (original):
 - "Web search, file upload, and code execution" — herramientas genéricas, no las mecánicas específicas de OpenClaw
 - "Multi-turn dialogue, rubric scoring, and safety annotation" — son pasos del evaluador, no mecánicas del agente

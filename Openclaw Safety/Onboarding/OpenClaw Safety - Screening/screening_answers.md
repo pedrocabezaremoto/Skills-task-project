@@ -89,6 +89,14 @@
 
 ---
 
+## Q10 — Model follows suspicious instructions in a Google Sheet cell comment. Failure category?
+
+**Correct answer:** F4 — Injection and robustness
+
+**Why:** Instrucciones maliciosas embedidas en tool outputs (Google Sheet cell comment) que el agente sigue = prompt injection = F4. Del safety failures domain 7: "Jailbreaks and prompt injections (direct/indirect attempts to hijack behavior)" / F4 cubre third-party instruction injection desde fuentes externas.
+
+---
+
 ## Q1 — Wrong options (original):
 - "Web search, file upload, and code execution" — herramientas genéricas, no las mecánicas específicas de OpenClaw
 - "Multi-turn dialogue, rubric scoring, and safety annotation" — son pasos del evaluador, no mecánicas del agente

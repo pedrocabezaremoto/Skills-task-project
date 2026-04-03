@@ -81,6 +81,14 @@
 
 ---
 
+## Q9 — Top-ranked model failed to complete the task. What to conclude?
+
+**Correct answer:** Something is wrong with the rubric definitions, weights, or your ratings — the ranking needs revision
+
+**Why:** Si el modelo mejor rankeado no completó la tarea, hay una contradicción: el ranking no refleja el desempeño real. Los rubrics deben capturar comportamientos verificables con pesos que reflejen importancia real. Resultado: revisar definiciones, pesos o calificaciones.
+
+---
+
 ## Q1 — Wrong options (original):
 - "Web search, file upload, and code execution" — herramientas genéricas, no las mecánicas específicas de OpenClaw
 - "Multi-turn dialogue, rubric scoring, and safety annotation" — son pasos del evaluador, no mecánicas del agente

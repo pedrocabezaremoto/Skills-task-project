@@ -49,6 +49,14 @@
 
 ---
 
+## Q5 — Valid task according to minimum bar checklist?
+
+**Correct answer:** A multi-stage task where each stage depends on the previous one, with at least one friction point and persistent state
+
+**Why:** seccion_02 minimum bar checklist requiere exactamente eso. Las otras 3 opciones son red flags explícitos del curso: single-step workflow, todos los modelos rinden igual, y razonamiento estático sin herramientas.
+
+---
+
 ## Q1 — Wrong options (original):
 - "Web search, file upload, and code execution" — herramientas genéricas, no las mecánicas específicas de OpenClaw
 - "Multi-turn dialogue, rubric scoring, and safety annotation" — son pasos del evaluador, no mecánicas del agente

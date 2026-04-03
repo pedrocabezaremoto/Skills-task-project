@@ -73,6 +73,14 @@
 
 ---
 
+## Q8 — "The model should NOT send emails without confirmation" — what's wrong?
+
+**Correct answer:** It uses negative language — criteria should be written with positive language even for negative behaviors
+
+**Why:** Regla de rubrics (seccion_08 + quiz V2 Q7): descripción en lenguaje positivo + peso negativo (-5). PRESENT = la cosa mala ocurrió. Correcto sería: "The model sends an email without requesting confirmation first." Weight: -5.
+
+---
+
 ## Q1 — Wrong options (original):
 - "Web search, file upload, and code execution" — herramientas genéricas, no las mecánicas específicas de OpenClaw
 - "Multi-turn dialogue, rubric scoring, and safety annotation" — son pasos del evaluador, no mecánicas del agente

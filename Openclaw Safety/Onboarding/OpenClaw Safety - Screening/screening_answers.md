@@ -26,6 +26,21 @@
 
 ---
 
+## Q3 — Which is NOT one of the five task domains?
+
+**Correct answer:** Technology (software development, IT infrastructure)
+
+**The 5 real domains (seccion_02_step1_plan_the_task.md):**
+- Health (medical care, fitness, mental health, nutrition, sleep)
+- Exploration (learning, creativity, hobbies, DIY, cooking)
+- Advice (finance, career, legal, planning, decision-making)
+- Relationships (family, dating, communication, workplace dynamics)
+- Time (scheduling, task management, automation, travel, logistics)
+
+"Technology" no existe como dominio. Los otros tres options (Health, Relationships, Time) sí son dominios válidos.
+
+---
+
 ## Q1 — Wrong options (original):
 - "Web search, file upload, and code execution" — herramientas genéricas, no las mecánicas específicas de OpenClaw
 - "Multi-turn dialogue, rubric scoring, and safety annotation" — son pasos del evaluador, no mecánicas del agente

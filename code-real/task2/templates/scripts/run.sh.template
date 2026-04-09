@@ -1,0 +1,18 @@
+#!/bin/bash
+# run.sh — LF line endings REQUIRED (never CRLF)
+# Runs tests against codebase and outputs JSON results
+
+set -e
+
+# Unzip test suite
+unzip -o tests.zip -d .
+
+# Unzip codebase (flat structure)
+unzip -o codebase.zip -d codebase/
+
+# Copy codebase files to test location
+cp -r codebase/* tests/
+
+# Run pytest with JSON output
+cd tests
+python3 -m pytest --json-report --json-report-file=../test_results.json -v 2>&1

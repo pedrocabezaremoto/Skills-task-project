@@ -1,0 +1,20 @@
+FROM ubuntu:22.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && apt-get install -y \
+    python3 \
+    python3-pip \
+    python3-setuptools \
+    git \
+    zip \
+    unzip \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN pip3 install pytest pytest-json-report
+
+WORKDIR /app
+
+RUN git init
+
+# DO NOT add COPY or ADD for project code — validation script handles this

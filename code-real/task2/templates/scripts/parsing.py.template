@@ -1,0 +1,32 @@
+#!/usr/bin/env python3
+# parsing.py — LF line endings REQUIRED (never CRLF)
+# Parses pytest JSON output into structured results
+
+import json
+import sys
+
+def parse_results(json_file="test_results.json"):
+    with open(json_file, "r") as f:
+        data = json.load(f)
+
+    results = []
+    for test in data.get("tests", []):
+        results.append({
+            "name": test["nodeid"],
+            "status": test["outcome"].upper(),
+            "duration": test.get("duration", 0)
+        })
+
+    summary = {
+        "total": data["summary"]["total"],
+        "passed": data["summary"].get("passed", 0),
+        "failed": data["summary"].get("failed", 0),
+        "errors": data["summary"].get("errors", 0),
+        "tests": results
+    }
+
+    print(json.dumps(summary, indent=2))
+    return summary
+
+if __name__ == "__main__":
+    parse_results()

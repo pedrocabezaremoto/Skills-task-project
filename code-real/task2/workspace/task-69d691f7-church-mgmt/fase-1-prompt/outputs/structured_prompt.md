@@ -15,11 +15,11 @@ A church or community organization needs a centralized web platform to coordinat
 
 ## Requirements
 
-1. An organization registers with a name, mission statement, and an initial admin staff account (email + password).
+1. An organization is bootstrapped via a single registration endpoint that accepts the organization name, mission statement, and an array of one or more initial admin staff accounts (each with full name, email, and password). This creates the organization record and the initial `staff` accounts in one atomic operation. All subsequent user accounts are created exclusively by existing staff.
 2. Staff can create, read, update, and delete member profiles. Each profile includes: full name, email, phone number, membership date (ISO date string), and one or more involvement areas selected from a configurable list.
-3. A member profile supports linked family connections: a spouse (linked by member ID) and zero or more children (each linked by member ID), all stored as separate member profiles.
+3. A member profile supports linked family connections via a dedicated `family_links` table. Invariants: maximum one `spouse` link per member; spouse links are symmetric (if A is spouse of B, B is spouse of A); parent-child links are directional; self-linking is prohibited. All connections link to separate member profiles.
 4. Staff can manage the involvement area list: add, rename, and delete areas (e.g., "worship team", "youth ministry", "hospitality", "outreach").
-5. Authenticated users can create small groups. Each group stores: name, description, meeting frequency (`weekly` | `biweekly` | `monthly`), meeting day (integer 0–6), meeting time (HH:MM string), location, leader ID (must be an existing member), and category (`bible_study` | `support_group` | `service_team` | `social`).
+5. Only staff can create small groups. Each group stores: name, description, meeting frequency (`weekly` | `biweekly` | `monthly`), meeting day (integer 0–6), meeting time (HH:MM string), location, leader ID (must reference an existing member record), and category (`bible_study` | `support_group` | `service_team` | `social`).
 6. Any authenticated member can browse the list of available groups and submit a join request to any group they are not already a member of.
 7. A group leader can list pending join requests for their groups and approve or reject each request individually. Approved members are added to the roster; rejected requests are discarded.
 8. Each group exposes a roster endpoint returning the list of all currently approved members.
@@ -28,19 +28,20 @@ A church or community organization needs a centralized web platform to coordinat
 11. Each group has a prayer request list. Only current approved group members can post or view prayer requests. Each request has a title and a description field.
 12. Staff can create church-wide events. Each event stores: title, date (ISO date), time (HH:MM), location, and description.
 13. Any authenticated member can RSVP to an event with status `attending` or `not_attending`. A member can update their own RSVP. Staff can retrieve the full RSVP list for any event.
-14. The check-in system for events allows searching members by name fragment and marking a matched member as checked in for a specific event. A member can only be checked in once per event; a duplicate check-in returns HTTP 409.
+14. The check-in system for events is restricted to staff. Staff search members by name fragment and mark a matched member as checked in for a specific event. A member can only be checked in once per event; a duplicate check-in returns HTTP 409.
 15. Staff define volunteer roles (e.g., "Sunday greeter", "sound technician"). Roles are reusable across schedule slots.
 16. Staff create weekly volunteer schedule slots, each containing a role ID, a date, and an optional member ID assignment. Members can self-sign-up for unassigned slots.
 17. If assigning a member to a slot would result in that member having two slots on the same date, the API returns HTTP 409 with a conflict error body `{ error: string, conflictingSlotId: number }`.
 18. Any schedule slot with no assigned member is flagged as `gap: true` in the response. The schedule endpoint accepts a `date` query parameter (YYYY-MM-DD) to filter results by date.
 19. Staff record donations per member: amount (decimal, two decimal places), date (ISO date), and fund designation (`general` | `missions` | `building`).
 20. Staff can retrieve an annual giving summary per member (total and count per fund for a given year) and organization-wide donation totals grouped by fund for a given year.
-21. Staff can send announcements with a title and body to all members or filtered to members with a specific involvement area. Announcements are stored and retrievable by all authenticated users.
+21. Staff can send announcements with a title and body targeted to member-linked users. Announcements with no `involvementAreaId` target are visible to all users whose accounts are linked to a member profile. Announcements with a specific `involvementAreaId` are visible only to member-linked users whose member profile includes that involvement area.
 22. The reports endpoint for a group returns: the average attendance count across the group's last 12 recorded meetings and an array of per-meeting attendance counts representing the trend.
 23. The engagement endpoint returns a score per member calculated as: `(number of events the member checked in to) + (number of group meetings the member attended)`.
 24. All data persists in a SQLite database file. The database initializes all required tables automatically on server startup if they do not already exist.
-25. The API implements JWT authentication. Every protected route requires a valid `Authorization: Bearer <token>` header. The JWT payload includes `{ id, email, role }`. Missing tokens return HTTP 401; invalid or expired tokens return HTTP 403.
-26. Three roles exist: `staff`, `group_leader`, `member`. Role-based access control is enforced on all protected routes: staff access all endpoints; group leaders manage only their own groups (attendance, roster, join requests); members access browsing, events, RSVP, volunteer sign-up, and group participation features.
+25. The API implements JWT authentication. Every protected route requires a valid `Authorization: Bearer <token>` header. The JWT payload includes `{ id, email, role, memberId }` where `memberId` is the linked member profile ID (null for accounts not yet linked to a member profile). Missing tokens return HTTP 401; invalid or expired tokens return HTTP 403.
+26. Three roles exist: `staff`, `group_leader`, `member`. Role-based access control is enforced on all protected routes: staff access all endpoints; group leaders manage only their own groups (attendance, roster, join requests), identified by matching `req.user.memberId` to the group's `leaderId`; members access browsing, events, RSVP, volunteer sign-up, and group participation features.
+27. The `users` table stores a `memberId` foreign key referencing the `members` table. Staff and group_leader/member accounts that are created after bootstrap must supply a valid `memberId` (HTTP 400 if absent or invalid for group_leader/member roles). Staff accounts may have null `memberId`. Referential integrity is enforced: a member profile cannot be deleted if it is linked to a user account or referenced as a group `leaderId`. Any protected route requiring member identity returns HTTP 403 if `req.user.memberId` is null.
 
 ## Expected Interface
 
@@ -64,9 +65,9 @@ A church or community organization needs a centralized web platform to coordinat
 - **Path:** `server/src/routes/auth.ts`
 - **Name:** `authRouter`
 - **Type:** Express Router
-- **Input:** `POST /auth/register` body `{ name: string, email: string, password: string, role: 'staff'|'group_leader'|'member' }` · `POST /auth/login` body `{ email: string, password: string }`
-- **Output:** `{ token: string, user: { id: number, name: string, email: string, role: string } }` · HTTP 401 on invalid credentials · HTTP 409 on duplicate email
-- **Description:** Registers a new user with hashed password and authenticates existing users. Returns a signed JWT on success.
+- **Input:** `POST /auth/bootstrap` body `{ organizationName: string, missionStatement: string, staffAccounts: { name: string, email: string, password: string }[] }` (public; returns HTTP 409 if an organization record already exists — enforces singleton) · `POST /auth/users` body `{ name: string, email: string, password: string, role: 'staff'|'group_leader'|'member', memberId?: number }` (staff-only; `memberId` required for group_leader/member, optional for staff) · `POST /auth/login` body `{ email: string, password: string }` · `GET /auth/me`
+- **Output:** Bootstrap: `{ success: boolean, organizationId: number }` · Login: `{ token: string, user: { id: number, name: string, email: string, role: string, memberId: number|null } }` · GET /auth/me: `{ id: number, name: string, email: string, role: string, memberId: number|null, member: MemberObject|null }` · HTTP 401 on invalid credentials · HTTP 409 on duplicate email
+- **Description:** Bootstraps the organization and initial staff accounts in one operation. Staff create all subsequent user accounts; every non-staff account must be linked to an existing member profile. All users authenticate via login and receive a JWT containing memberId. The /auth/me endpoint returns the authenticated user with their linked member profile.
 
 ### Members Router
 - **Path:** `server/src/routes/members.ts`
@@ -128,9 +129,9 @@ A church or community organization needs a centralized web platform to coordinat
 - **Path:** `server/src/routes/communications.ts`
 - **Name:** `communicationsRouter`
 - **Type:** Express Router
-- **Input:** `POST /communications/announcements` body `{ title: string, body: string, involvementArea?: string }` (staff only) · `GET /communications/announcements`
-- **Output:** Announcement object `{ id, title, body, targetArea: string|null, sentAt: string, sentBy: number }` or array
-- **Description:** Staff create announcements targeted to all members or filtered by involvement area. All authenticated users can read the announcement feed.
+- **Input:** `POST /communications/announcements` body `{ title: string, body: string, involvementAreaId?: number }` (staff only) · `GET /communications/announcements`
+- **Output:** Announcement object `{ id, title, body, involvementAreaId: number|null, targetAreaName: string|null, sentAt: string, sentBy: number }` or array. GET returns only announcements where `involvementAreaId` is null or matches the requesting user's linked member involvement areas.
+- **Description:** Staff create announcements targeted by numeric area ID or to all members. GET filters results so area-targeted announcements are visible only to members of that area. All authenticated users see non-targeted announcements.
 
 ### Reports Router
 - **Path:** `server/src/routes/reports.ts`
@@ -145,7 +146,7 @@ A church or community organization needs a centralized web platform to coordinat
 - **Name:** `authenticateToken`
 - **Type:** function (Express RequestHandler)
 - **Input:** `req: Request, res: Response, next: NextFunction` — reads `Authorization: Bearer <token>` header
-- **Output:** `void` — attaches `req.user: { id: number, email: string, role: string }` on success · HTTP 401 if token missing · HTTP 403 if token invalid or expired
+- **Output:** `void` — attaches `req.user: { id: number, email: string, role: string, memberId: number|null }` on success · HTTP 401 if token missing · HTTP 403 if token invalid or expired
 - **Description:** Verifies the JWT signature, decodes the payload, and attaches the user object to the request. Calls `next()` on success.
 
 ### Role Guard Middleware
@@ -156,5 +157,29 @@ A church or community organization needs a centralized web platform to coordinat
 - **Output:** Express `RequestHandler` — calls `next()` if `req.user.role` is in the allowed list; returns HTTP 403 otherwise
 - **Description:** Returns an Express middleware that enforces role-based access. Used after `authenticateToken` on routes requiring specific roles.
 
+### Frontend App Entrypoint
+- **Path:** `client/src/main.tsx`
+- **Name:** `main`
+- **Type:** React application entrypoint
+- **Input:** none — renders `<App />` into `#root` DOM element
+- **Output:** void — mounts the React application
+- **Description:** Bootstraps the React 18 application using `ReactDOM.createRoot`. Wraps `<App />` with `BrowserRouter` from React Router v6.
+
+### Frontend App Router
+- **Path:** `client/src/App.tsx`
+- **Name:** `App`
+- **Type:** React functional component
+- **Input:** none
+- **Output:** JSX — top-level router with protected and public routes
+- **Description:** Defines the client-side route tree. Public routes: `/login`, `/`. Protected routes (requires valid JWT in localStorage): `/dashboard`, `/members`, `/groups`, `/groups/:id`, `/events`, `/volunteers`, `/giving`, `/communications`, `/reports`. Unauthenticated access to protected routes redirects to `/login`.
+
+### Frontend API Client
+- **Path:** `client/src/api/client.ts`
+- **Name:** `apiClient`
+- **Type:** exported constant (Axios instance)
+- **Input:** none — module export
+- **Output:** `AxiosInstance` — configured with `baseURL` of `http://localhost:3000` (the local backend), and a request interceptor that attaches `Authorization: Bearer <token>` from localStorage on every request
+- **Description:** Centralized Axios instance used by all frontend service modules. The baseURL is constrained to the local backend origin (localhost only). No requests to external or third-party URLs are permitted. Handles auth header injection automatically.
+
 ## Current State
-This is a greenfield project. No existing codebase, files, or database exist. Build the entire full-stack application from scratch following the tech stack and requirements listed above. The final deliverable must include both the backend (`server/`) and frontend (`client/`) in a single repository with a `README.md` containing instructions to install dependencies and start both services.
+This is a greenfield project. No existing codebase, files, or database exist. Build the entire full-stack application from scratch following the tech stack and requirements listed above. The final deliverable must include both the backend (`server/`) and frontend (`client/`) in a single repository with a `README.md` containing instructions to install dependencies and start both services. The application must operate entirely on the local machine. The backend server must bind exclusively to `127.0.0.1` (loopback) and must not bind to `0.0.0.0`. No code in the frontend may perform outbound network requests to external origins. No code in the backend may utilize standard libraries (`http`, `https`, `net`, `tls`, `dns`, `dgram`, `child_process`) or ANY external HTTP clients (including `fetch` and `axios`) to make network/egress requests to third-party services, analytics endpoints, SMTP servers, or external APIs. All Axios requests in the frontend must target `http://127.0.0.1:3000` only. All fonts, icons, and static assets MUST be sourced exclusively from npm packages.

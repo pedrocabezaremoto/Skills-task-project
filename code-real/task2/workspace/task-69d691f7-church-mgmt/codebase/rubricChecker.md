@@ -32,10 +32,13 @@ Para cada criterio, verifica:
 | **Atomicidad** | Verifica UNA sola cosa discreta | MAJOR si agrupa cosas sin relación |
 | **Self-contained** | Se puede evaluar SIN leer el prompt | MAJOR si requiere contexto externo |
 | **Positive framing** | El criterio evalúa a YES/PASS cuando es correcto | MAJOR si está en negativo |
+| **Reframing correcto** | "Does not use X" → debe decir "Successfully avoids X" | MODERATE si usa "no / does not / evita que" directo |
+| **No redundancia** | No hay otro criterio verificando el mismo requisito | MODERATE si hay par duplicado |
 | **No overfitting** | No fuerza implementación específica que el prompt no pidió | MODERATE |
 | **No underfitting** | No tan vago que acepta respuestas incorrectas | MODERATE |
 | **No subjetivo** | Sin "apropiado", "correcto", "buenas prácticas" sin definir | MODERATE |
-| **Peso correcto** | 5=crítico, 3=importante, 1=deseable | MINOR si off by 1 level |
+| **Peso correcto (gap 1)** | 5=crítico, 3=importante, 1=deseable — off by 1 nivel | MINOR |
+| **Peso correcto (gap 2)** | Desviación de 2 niveles (ej: puso 1, debía ser 5) | MAJOR |
 | **Categoría correcta** | Instrucción Seguida / Corrección / Eficiencia / Claridad / Calidad | MINOR |
 
 ---

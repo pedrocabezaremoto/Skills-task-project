@@ -78,25 +78,25 @@ A data engineer working with audio recordings needs a Python library that identi
 - **Path:** `audio_fingerprint/database.py`
 - **Name:** `build_database`
 - **Type:** function
-- **Input:** `wav_dir: str, db_path: str`
+- **Input:** `wav_dir: str, db_path: str, threshold_factor: float = 2.0, fan_out_time: int = 10, window_size: int = 4096, hop_length: int = 2048`
 - **Output:** `None` — side effect: creates or updates SQLite DB at `db_path`, ensures `fingerprints` table and `idx_fingerprints_hash` index exist, and populates the table with fingerprint rows.
-- **Description:** Iterates over all `.wav` files in `wav_dir`, deletes any existing rows for each `song_name`, fingerprints each file, and inserts `(hash_val, time_offset, song_name)` rows. The hash index MUST exist before any insert.
+- **Description:** Creates the `fingerprints` table with `CREATE TABLE IF NOT EXISTS fingerprints (hash INTEGER, offset INTEGER, song_name TEXT)` and immediately creates the index `CREATE INDEX IF NOT EXISTS idx_fingerprints_hash ON fingerprints(hash)` before any data insertion. Iterates over all `.wav` files in `wav_dir`, derives `song_name` as the filename without path and without extension, executes `DELETE FROM fingerprints WHERE song_name = ?` to remove stale entries, calls `fingerprint()` forwarding `threshold_factor`, `fan_out_time`, `window_size`, and `hop_length`, and inserts every `(hash_val, time_offset, song_name)` triple into the table.
 
 ### Component 3
 - **Path:** `audio_fingerprint/database.py`
 - **Name:** `query`
 - **Type:** function
-- **Input:** `wav_path: str, db_path: str, min_confidence: int = 5`
+- **Input:** `wav_path: str, db_path: str, min_confidence: int = 5, threshold_factor: float = 2.0, fan_out_time: int = 10, window_size: int = 4096, hop_length: int = 2048`
 - **Output:** `tuple[str, int]` — `(song_name, confidence)` where confidence is the count of aligned hashes when confidence >= `min_confidence`; returns `("no_match", 0)` if no hashes match (case a) or if all alignment counts are below `min_confidence` (case b).
-- **Description:** Fingerprints the input clip, looks up each hash via `idx_fingerprints_hash`, computes `offset_diff = db_offset - clip_offset` per matching row, groups by `(song_name, offset_diff)`, and returns the song with the highest alignment count if that count meets the minimum threshold.
+- **Description:** Fingerprints the input clip by calling `fingerprint()` forwarding `threshold_factor`, `fan_out_time`, `window_size`, and `hop_length`. Looks up each hash in the database via the `idx_fingerprints_hash` index. Computes `offset_diff = db_offset - clip_offset` for each matching row, groups results by `(song_name, offset_diff)`, and returns the `(song_name, confidence)` pair with the highest alignment count only when confidence >= `min_confidence`. Returns `("no_match", 0)` when zero hashes match (case a) or when the highest alignment count is strictly less than `min_confidence` (case b).
 
 ### Component 4
 - **Path:** `audio_fingerprint/matcher.py`
 - **Name:** `test_mode`
 - **Type:** function
-- **Input:** `wav_path: str, db_path: str`
+- **Input:** `wav_path: str, db_path: str, threshold_factor: float = 2.0, fan_out_time: int = 10, window_size: int = 4096, hop_length: int = 2048, min_confidence: int = 5`
 - **Output:** `bool` — `True` if the noisy 10-second clip is correctly identified as the source recording; `False` otherwise.
-- **Description:** Extracts a random 10-second segment (seed=42; uses full clip if shorter than 10 seconds), adds Gaussian noise at 20 dB SNR, writes to a temporary file, calls `query()`, and returns `True` if the top match song name equals the base filename (no path, no extension) of `wav_path`.
+- **Description:** Loads the WAV at `wav_path`, extracts a random contiguous 10-second segment using a fixed random seed of 42 (uses the full clip if shorter than 10 seconds), adds Gaussian white noise at exactly 20 dB SNR, writes the noisy clip to a temporary file via Python's `tempfile` module, calls `query()` forwarding `threshold_factor`, `fan_out_time`, `window_size`, `hop_length`, and `min_confidence`, and returns `True` if the returned song name exactly matches the base filename (no directory path, no extension) of `wav_path`.
 
 ### Component 5
 - **Path:** `audio_fingerprint/__main__.py`

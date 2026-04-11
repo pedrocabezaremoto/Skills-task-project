@@ -130,7 +130,7 @@ A church or community organization needs a centralized web platform to coordinat
 - **Name:** `communicationsRouter`
 - **Type:** Express Router
 - **Input:** `POST /communications/announcements` body `{ title: string, body: string, involvementAreaId?: number }` (staff only) · `GET /communications/announcements`
-- **Output:** Announcement object `{ id, title, body, involvementAreaId: number|null, targetAreaName: string|null, sentAt: string, sentBy: number }` or array. GET returns only announcements where `involvementAreaId` is null or matches the requesting user's linked member involvement areas.
+- **Output:** POST: Announcement object `{ id, title, body, involvementAreaId: number|null, targetAreaName: string|null, sentAt: string, sentBy: number }` · HTTP 403 if caller does not have the `staff` role · GET: array of Announcement objects filtered so that `involvementAreaId` is null or matches the requesting user's linked member involvement areas.
 - **Description:** Staff create announcements targeted by numeric area ID or to all member-linked users. GET filters results: area-targeted announcements are visible only to member-linked users of that area; non-targeted announcements are visible to all member-linked users. Staff accounts MUST always receive all announcements regardless of member linkage.
 
 ### Reports Router
@@ -138,7 +138,7 @@ A church or community organization needs a centralized web platform to coordinat
 - **Name:** `reportsRouter`
 - **Type:** Express Router
 - **Input:** `GET /reports/group-health/:groupId` · `GET /reports/engagement`
-- **Output:** Group health `{ groupId: number, averageAttendance: number, trend: number[] }` where `trend` is the per-meeting attendance count array for the last 12 meetings · Engagement list `{ memberId: number, name: string, score: number }[]`
+- **Output:** Group health `{ groupId: number, averageAttendance: number, trend: number[] }` where `trend` is the per-meeting attendance count array for the last 12 meetings · HTTP 404 if `groupId` does not reference an existing group · Engagement list `{ memberId: number, name: string, score: number }[]`
 - **Description:** Returns attendance trend data for the last 12 recorded meetings of a group and member engagement scores (sum of event check-ins and group meeting attendances per member).
 
 ### JWT Auth Middleware
@@ -171,7 +171,7 @@ A church or community organization needs a centralized web platform to coordinat
 - **Type:** React functional component
 - **Input:** none
 - **Output:** JSX — top-level router with protected and public routes
-- **Description:** Defines the client-side route tree. Public routes: `/login`, `/`. Protected routes (requires valid JWT in localStorage): `/dashboard`, `/members`, `/groups`, `/groups/:id`, `/events`, `/volunteers`, `/giving`, `/communications`, `/reports`. Unauthenticated access to protected routes redirects to `/login`.
+- **Description:** Defines the client-side route tree. Public routes: `/login`, `/`. Protected routes (requires valid JWT in localStorage): `/dashboard`, `/members`, `/groups`, `/groups/:id`, `/events`, `/volunteers`, `/giving`, `/communications`, `/reports`. Unauthenticated access to protected routes redirects to `/login`. Every feature defined in the Requirements MUST be reachable through the frontend UI — not only via direct API call. Specifically: the `/events` detail page MUST include a check-in section with member name search and a mark-as-checked-in action; the `/groups/:id` page MUST expose join request approval/rejection controls for group leaders and an attendance recording form; the `/volunteers` page MUST allow members to self-sign-up for unassigned slots and display gap indicators.
 
 ### Frontend API Client
 - **Path:** `client/src/api/client.ts`

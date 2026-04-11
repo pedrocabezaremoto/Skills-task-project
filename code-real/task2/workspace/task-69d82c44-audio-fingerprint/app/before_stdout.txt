@@ -1,0 +1,338 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.0.2, pluggy-1.6.0 -- /usr/bin/python3
+cachedir: .pytest_cache
+rootdir: /tmp/baseline_run
+collecting ... collected 71 items
+
+test_f2p.py::TestFileStructure::test_fingerprint_module_importable PASSED [  1%]
+test_f2p.py::TestFileStructure::test_database_module_importable PASSED   [  2%]
+test_f2p.py::TestFileStructure::test_matcher_module_importable PASSED    [  4%]
+test_f2p.py::TestFileStructure::test_main_module_importable FAILED       [  5%]
+test_f2p.py::TestFileStructure::test_generate_samples_importable PASSED  [  7%]
+test_f2p.py::TestFingerprintLoader::test_req2_loads_wav_via_scipy PASSED [  8%]
+test_f2p.py::TestFingerprintLoader::test_req3_stereo_converted_to_mono PASSED [  9%]
+test_f2p.py::TestFingerprintLoader::test_req4_normalised_to_float64 PASSED [ 11%]
+test_f2p.py::TestFingerprintLoader::test_req5_stft_used_hann_window PASSED [ 12%]
+test_f2p.py::TestFingerprintDefaults::test_req6_default_window_size_4096 PASSED [ 14%]
+test_f2p.py::TestFingerprintDefaults::test_req7_default_hop_length_2048 PASSED [ 15%]
+test_f2p.py::TestFingerprintDefaults::test_req10_default_threshold_factor_2 PASSED [ 16%]
+test_f2p.py::TestFingerprintDefaults::test_req16_default_fan_out_time_10 PASSED [ 18%]
+test_f2p.py::TestPeakDetection::test_req8_9_multiplicative_threshold_only FAILED [ 19%]
+test_f2p.py::TestPeakDetection::test_req12_local_maxima_strictly_greater_than_neighbors PASSED [ 21%]
+test_f2p.py::TestPeakDetection::test_req13_14_boundary_bins_excluded PASSED [ 22%]
+test_f2p.py::TestPeakDetection::test_req15_fan_out_time_bounds_pairing PASSED [ 23%]
+test_f2p.py::TestHashFormat::test_req17_bit_packing_formula PASSED       [ 25%]
+test_f2p.py::TestHashFormat::test_req17_hash_fits_in_36_bits PASSED      [ 26%]
+test_f2p.py::TestHashFormat::test_req18_returns_list_of_tuples PASSED    [ 28%]
+test_f2p.py::TestHashFormat::test_req19_time_offset_is_frame_index PASSED [ 29%]
+test_f2p.py::TestHashFormat::test_req20_empty_list_if_no_peaks PASSED    [ 30%]
+test_f2p.py::TestFunctionSignatures::test_req21_build_database_signature FAILED [ 32%]
+test_f2p.py::TestFunctionSignatures::test_req22_query_signature FAILED   [ 33%]
+test_f2p.py::TestFunctionSignatures::test_req23_test_mode_signature FAILED [ 35%]
+test_f2p.py::TestFunctionSignatures::test_req24_params_flow_through_calls FAILED [ 36%]
+test_f2p.py::TestBuildDatabase::test_req25_iterates_all_wav_files FAILED [ 38%]
+test_f2p.py::TestBuildDatabase::test_req26_calls_fingerprint_per_file FAILED [ 39%]
+test_f2p.py::TestBuildDatabase::test_req27_song_name_is_stem_without_extension FAILED [ 40%]
+test_f2p.py::TestBuildDatabase::test_req28_delete_before_insert_idempotency FAILED [ 42%]
+test_f2p.py::TestBuildDatabase::test_req29_table_schema_exact FAILED     [ 43%]
+test_f2p.py::TestBuildDatabase::test_req30_index_exists FAILED           [ 45%]
+test_f2p.py::TestBuildDatabase::test_req31_index_created_before_insert FAILED [ 46%]
+test_f2p.py::TestBuildDatabase::test_req32_inserts_hash_offset_song_name_triples FAILED [ 47%]
+test_f2p.py::TestQuery::test_req33_query_fingerprints_input PASSED       [ 49%]
+test_f2p.py::TestQuery::test_req34_query_uses_hash_index FAILED          [ 50%]
+test_f2p.py::TestQuery::test_req35_36_37_offset_diff_and_grouping FAILED [ 52%]
+test_f2p.py::TestQuery::test_req38_returns_result_only_when_above_min_confidence FAILED [ 53%]
+test_f2p.py::TestQuery::test_req39_no_match_case_a_zero_hashes PASSED    [ 54%]
+test_f2p.py::TestQuery::test_req40_no_match_case_b_below_min_confidence PASSED [ 56%]
+test_f2p.py::TestQuery::test_req39_no_match_returns_tuple_not_none PASSED [ 57%]
+test_f2p.py::TestTestMode::test_req41_test_mode_loads_wav PASSED         [ 59%]
+test_f2p.py::TestTestMode::test_req42_fixed_seed_42 PASSED               [ 60%]
+test_f2p.py::TestTestMode::test_req43_extracts_10_second_segment PASSED  [ 61%]
+test_f2p.py::TestTestMode::test_req44_uses_full_clip_if_shorter_than_10s PASSED [ 63%]
+test_f2p.py::TestTestMode::test_req45_adds_gaussian_noise_20db_snr FAILED [ 64%]
+test_f2p.py::TestTestMode::test_req46_uses_tempfile PASSED               [ 66%]
+test_f2p.py::TestTestMode::test_req47_calls_query_internally PASSED      [ 67%]
+test_f2p.py::TestTestMode::test_req48_matches_base_filename FAILED       [ 69%]
+test_f2p.py::TestCLI::test_req49_invokable_as_module FAILED              [ 70%]
+test_f2p.py::TestCLI::test_req50_three_subcommands_exist FAILED          [ 71%]
+test_f2p.py::TestCLI::test_req51_52_53_build_subcommand FAILED           [ 73%]
+test_f2p.py::TestCLI::test_req54_55_56_57_query_subcommand_match FAILED  [ 74%]
+test_f2p.py::TestCLI::test_req57_query_no_match_prints_no_match_found FAILED [ 76%]
+test_f2p.py::TestCLI::test_req58_59_60_test_subcommand_pass FAILED       [ 77%]
+test_f2p.py::TestCLI::test_req61_test_subcommand_fail FAILED             [ 78%]
+test_f2p.py::TestGenerateSamples::test_req62_generate_samples_function_signature PASSED [ 80%]
+test_f2p.py::TestGenerateSamples::test_req63_no_network_download FAILED  [ 81%]
+test_f2p.py::TestGenerateSamples::test_req64_exactly_two_wav_files FAILED [ 83%]
+test_f2p.py::TestGenerateSamples::test_req65_each_file_exactly_30_seconds FAILED [ 84%]
+test_f2p.py::TestGenerateSamples::test_req66_sample_rate_44100 FAILED    [ 85%]
+test_f2p.py::TestGenerateSamples::test_req67_68_five_chirp_components FAILED [ 87%]
+test_f2p.py::TestGenerateSamples::test_req69_70_no_shared_start_end_frequencies FAILED [ 88%]
+test_f2p.py::TestGenerateSamples::test_req71_frequencies_in_range_200_8000 FAILED [ 90%]
+test_f2p.py::TestGenerateSamples::test_req72_non_overlapping_frequency_ranges FAILED [ 91%]
+test_f2p.py::TestGenerateSamples::test_req73_at_least_200_distinct_hashes FAILED [ 92%]
+test_f2p.py::TestGenerateSamples::test_req74_no_external_download FAILED [ 94%]
+test_f2p.py::TestConstraints::test_req75_uses_sqlite3_directly FAILED    [ 95%]
+test_f2p.py::TestConstraints::test_req76_filesystem_io_only FAILED       [ 97%]
+test_f2p.py::TestConstraints::test_req77_no_listening_sockets PASSED     [ 98%]
+test_f2p.py::TestConstraints::test_req78_no_forbidden_module_imports FAILED [100%]
+
+=================================== FAILURES ===================================
+________________ TestFileStructure.test_main_module_importable _________________
+test_f2p.py:76: in test_main_module_importable
+    assert hasattr(m, "main"), "__main__.py must expose main()"
+E   AssertionError: __main__.py must expose main()
+E   assert False
+E    +  where False = hasattr(<module 'audio_fingerprint.__main__' from '/tmp/baseline_run/audio_fingerprint/__main__.py'>, 'main')
+_________ TestPeakDetection.test_req8_9_multiplicative_threshold_only __________
+test_f2p.py:170: in test_req8_9_multiplicative_threshold_only
+    assert len(result_high) < len(result_normal), (
+E   AssertionError: Very high threshold_factor must produce fewer hashes
+E   assert 0 < 0
+E    +  where 0 = len([])
+E    +  and   0 = len([])
+__________ TestFunctionSignatures.test_req21_build_database_signature __________
+test_f2p.py:249: in test_req21_build_database_signature
+    assert "threshold_factor" in params and params["threshold_factor"].default == 2.0
+E   assert ('threshold_factor' in mappingproxy(OrderedDict({'wav_dir': <Parameter "wav_dir: str">, 'db_path': <Parameter "db_path: str">})))
+______________ TestFunctionSignatures.test_req22_query_signature _______________
+test_f2p.py:259: in test_req22_query_signature
+    assert "threshold_factor" in params and params["threshold_factor"].default == 2.0
+E   assert ('threshold_factor' in mappingproxy(OrderedDict({'wav_path': <Parameter "wav_path: str">, 'db_path': <Parameter "db_path: str">, 'min_confidence': <Parameter "min_confidence: int = 5">})))
+____________ TestFunctionSignatures.test_req23_test_mode_signature _____________
+test_f2p.py:268: in test_req23_test_mode_signature
+    assert "threshold_factor" in params and params["threshold_factor"].default == 2.0
+E   assert ('threshold_factor' in mappingproxy(OrderedDict({'wav_path': <Parameter "wav_path: str">, 'db_path': <Parameter "db_path: str">})))
+_________ TestFunctionSignatures.test_req24_params_flow_through_calls __________
+test_f2p.py:278: in test_req24_params_flow_through_calls
+    result = query(_wav1(), DB_PATH, threshold_factor=9999999.0)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: query() got an unexpected keyword argument 'threshold_factor'
+_____________ TestBuildDatabase.test_req25_iterates_all_wav_files ______________
+test_f2p.py:292: in test_req25_iterates_all_wav_files
+    songs = {row[0] for row in conn.execute("SELECT DISTINCT song_name FROM fingerprints")}
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   sqlite3.OperationalError: no such table: fingerprints
+___________ TestBuildDatabase.test_req26_calls_fingerprint_per_file ____________
+test_f2p.py:301: in test_req26_calls_fingerprint_per_file
+    count_1 = conn.execute("SELECT count(*) FROM fingerprints WHERE song_name='sample_1'").fetchone()[0]
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   sqlite3.OperationalError: no such table: fingerprints
+_______ TestBuildDatabase.test_req27_song_name_is_stem_without_extension _______
+test_f2p.py:311: in test_req27_song_name_is_stem_without_extension
+    songs = {row[0] for row in conn.execute("SELECT DISTINCT song_name FROM fingerprints")}
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   sqlite3.OperationalError: no such table: fingerprints
+________ TestBuildDatabase.test_req28_delete_before_insert_idempotency _________
+test_f2p.py:321: in test_req28_delete_before_insert_idempotency
+    count_first = conn.execute("SELECT count(*) FROM fingerprints").fetchone()[0]
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   sqlite3.OperationalError: no such table: fingerprints
+_______________ TestBuildDatabase.test_req29_table_schema_exact ________________
+test_f2p.py:341: in test_req29_table_schema_exact
+    assert "hash" in col_names
+E   AssertionError: assert 'hash' in []
+__________________ TestBuildDatabase.test_req30_index_exists ___________________
+test_f2p.py:356: in test_req30_index_exists
+    assert idx is not None, "idx_fingerprints_hash must exist"
+E   AssertionError: idx_fingerprints_hash must exist
+E   assert None is not None
+___________ TestBuildDatabase.test_req31_index_created_before_insert ___________
+test_f2p.py:368: in test_req31_index_created_before_insert
+    assert idx is not None
+E   assert None is not None
+______ TestBuildDatabase.test_req32_inserts_hash_offset_song_name_triples ______
+test_f2p.py:376: in test_req32_inserts_hash_offset_song_name_triples
+    rows = conn.execute("SELECT hash, offset, song_name FROM fingerprints LIMIT 20").fetchall()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   sqlite3.OperationalError: no such table: fingerprints
+__________________ TestQuery.test_req34_query_uses_hash_index __________________
+test_f2p.py:402: in test_req34_query_uses_hash_index
+    assert song_name == "sample_1"
+E   AssertionError: assert 'no_match' == 'sample_1'
+E     
+E     - sample_1
+E     + no_match
+_____________ TestQuery.test_req35_36_37_offset_diff_and_grouping ______________
+test_f2p.py:409: in test_req35_36_37_offset_diff_and_grouping
+    assert song == "sample_1"
+E   AssertionError: assert 'no_match' == 'sample_1'
+E     
+E     - sample_1
+E     + no_match
+______ TestQuery.test_req38_returns_result_only_when_above_min_confidence ______
+test_f2p.py:417: in test_req38_returns_result_only_when_above_min_confidence
+    assert song == "sample_1"
+E   AssertionError: assert 'no_match' == 'sample_1'
+E     
+E     - sample_1
+E     + no_match
+_____________ TestTestMode.test_req45_adds_gaussian_noise_20db_snr _____________
+test_f2p.py:486: in test_req45_adds_gaussian_noise_20db_snr
+    assert result is True, "test_mode should correctly identify sample_1 despite noise"
+E   AssertionError: test_mode should correctly identify sample_1 despite noise
+E   assert False is True
+________________ TestTestMode.test_req48_matches_base_filename _________________
+test_f2p.py:507: in test_req48_matches_base_filename
+    assert run_test_mode(_wav1(), DB_PATH) is True
+E   AssertionError: assert False is True
+E    +  where False = run_test_mode('sample_data/sample_1.wav', 'test_fingerprints.db')
+E    +    where 'sample_data/sample_1.wav' = _wav1()
+____________________ TestCLI.test_req49_invokable_as_module ____________________
+test_f2p.py:525: in test_req49_invokable_as_module
+    assert callable(audio_fingerprint.__main__.main)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: module 'audio_fingerprint.__main__' has no attribute 'main'
+__________________ TestCLI.test_req50_three_subcommands_exist __________________
+test_f2p.py:529: in test_req50_three_subcommands_exist
+    from audio_fingerprint.__main__ import main
+E   ImportError: cannot import name 'main' from 'audio_fingerprint.__main__' (/tmp/baseline_run/audio_fingerprint/__main__.py)
+__________________ TestCLI.test_req51_52_53_build_subcommand ___________________
+test_f2p.py:541: in test_req51_52_53_build_subcommand
+    self._run_main(["audio_fingerprint", "build", "--dir", WAV_DIR, "--db", DB_PATH])
+test_f2p.py:518: in _run_main
+    from audio_fingerprint.__main__ import main
+E   ImportError: cannot import name 'main' from 'audio_fingerprint.__main__' (/tmp/baseline_run/audio_fingerprint/__main__.py)
+______________ TestCLI.test_req54_55_56_57_query_subcommand_match ______________
+test_f2p.py:548: in test_req54_55_56_57_query_subcommand_match
+    self._run_main(["audio_fingerprint", "query", "--clip", _wav1(), "--db", DB_PATH])
+test_f2p.py:518: in _run_main
+    from audio_fingerprint.__main__ import main
+E   ImportError: cannot import name 'main' from 'audio_fingerprint.__main__' (/tmp/baseline_run/audio_fingerprint/__main__.py)
+___________ TestCLI.test_req57_query_no_match_prints_no_match_found ____________
+test_f2p.py:556: in test_req57_query_no_match_prints_no_match_found
+    self._run_main([
+test_f2p.py:518: in _run_main
+    from audio_fingerprint.__main__ import main
+E   ImportError: cannot import name 'main' from 'audio_fingerprint.__main__' (/tmp/baseline_run/audio_fingerprint/__main__.py)
+________________ TestCLI.test_req58_59_60_test_subcommand_pass _________________
+test_f2p.py:568: in test_req58_59_60_test_subcommand_pass
+    self._run_main(["audio_fingerprint", "test", "--file", _wav1(), "--db", DB_PATH])
+test_f2p.py:518: in _run_main
+    from audio_fingerprint.__main__ import main
+E   ImportError: cannot import name 'main' from 'audio_fingerprint.__main__' (/tmp/baseline_run/audio_fingerprint/__main__.py)
+___________________ TestCLI.test_req61_test_subcommand_fail ____________________
+test_f2p.py:574: in test_req61_test_subcommand_fail
+    self._run_main(["audio_fingerprint", "test", "--file", _wav1(), "--db", "missing.db"])
+test_f2p.py:518: in _run_main
+    from audio_fingerprint.__main__ import main
+E   ImportError: cannot import name 'main' from 'audio_fingerprint.__main__' (/tmp/baseline_run/audio_fingerprint/__main__.py)
+______________ TestGenerateSamples.test_req63_no_network_download ______________
+test_f2p.py:595: in test_req63_no_network_download
+    assert os.path.exists(WAV_DIR)
+E   AssertionError: assert False
+E    +  where False = <function exists at 0x75a39ddf3560>('sample_data')
+E    +    where <function exists at 0x75a39ddf3560> = <module 'posixpath' (frozen)>.exists
+E    +      where <module 'posixpath' (frozen)> = os.path
+_____________ TestGenerateSamples.test_req64_exactly_two_wav_files _____________
+test_f2p.py:601: in test_req64_exactly_two_wav_files
+    files = [f for f in os.listdir(WAV_DIR) if f.endswith(".wav")]
+                        ^^^^^^^^^^^^^^^^^^^
+E   FileNotFoundError: [Errno 2] No such file or directory: 'sample_data'
+_________ TestGenerateSamples.test_req65_each_file_exactly_30_seconds __________
+test_f2p.py:606: in test_req65_each_file_exactly_30_seconds
+    for fname in os.listdir(WAV_DIR):
+                 ^^^^^^^^^^^^^^^^^^^
+E   FileNotFoundError: [Errno 2] No such file or directory: 'sample_data'
+_______________ TestGenerateSamples.test_req66_sample_rate_44100 _______________
+test_f2p.py:615: in test_req66_sample_rate_44100
+    for fname in os.listdir(WAV_DIR):
+                 ^^^^^^^^^^^^^^^^^^^
+E   FileNotFoundError: [Errno 2] No such file or directory: 'sample_data'
+___________ TestGenerateSamples.test_req67_68_five_chirp_components ____________
+test_f2p.py:624: in test_req67_68_five_chirp_components
+    for fname in os.listdir(WAV_DIR):
+                 ^^^^^^^^^^^^^^^^^^^
+E   FileNotFoundError: [Errno 2] No such file or directory: 'sample_data'
+______ TestGenerateSamples.test_req69_70_no_shared_start_end_frequencies _______
+test_f2p.py:635: in test_req69_70_no_shared_start_end_frequencies
+    for fname in os.listdir(WAV_DIR):
+                 ^^^^^^^^^^^^^^^^^^^
+E   FileNotFoundError: [Errno 2] No such file or directory: 'sample_data'
+_________ TestGenerateSamples.test_req71_frequencies_in_range_200_8000 _________
+test_f2p.py:645: in test_req71_frequencies_in_range_200_8000
+    for fname in os.listdir(WAV_DIR):
+                 ^^^^^^^^^^^^^^^^^^^
+E   FileNotFoundError: [Errno 2] No such file or directory: 'sample_data'
+_______ TestGenerateSamples.test_req72_non_overlapping_frequency_ranges ________
+test_f2p.py:664: in test_req72_non_overlapping_frequency_ranges
+    assert song1 == "sample_1", f"sample_1 queried as '{song1}'"
+E   AssertionError: sample_1 queried as 'no_match'
+E   assert 'no_match' == 'sample_1'
+E     
+E     - sample_1
+E     + no_match
+_________ TestGenerateSamples.test_req73_at_least_200_distinct_hashes __________
+test_f2p.py:669: in test_req73_at_least_200_distinct_hashes
+    for fname in os.listdir(WAV_DIR):
+                 ^^^^^^^^^^^^^^^^^^^
+E   FileNotFoundError: [Errno 2] No such file or directory: 'sample_data'
+_____________ TestGenerateSamples.test_req74_no_external_download ______________
+test_f2p.py:677: in test_req74_no_external_download
+    assert os.path.exists(WAV_DIR)
+E   AssertionError: assert False
+E    +  where False = <function exists at 0x75a39ddf3560>('sample_data')
+E    +    where <function exists at 0x75a39ddf3560> = <module 'posixpath' (frozen)>.exists
+E    +      where <module 'posixpath' (frozen)> = os.path
+_______________ TestConstraints.test_req75_uses_sqlite3_directly _______________
+test_f2p.py:692: in test_req75_uses_sqlite3_directly
+    assert "sqlite3" in src
+E   assert 'sqlite3' in 'def build_database(wav_dir: str, db_path: str):\n    pass\n\ndef query(wav_path: str, db_path: str, min_confidence: int = 5):\n    return ("no_match", 0)\n'
+________________ TestConstraints.test_req76_filesystem_io_only _________________
+test_f2p.py:705: in test_req76_filesystem_io_only
+    assert "open(" in src or "sqlite3" in src or "wavfile" in src  # local IO proof
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   assert ('open(' in 'def build_database(wav_dir: str, db_path: str):\n    pass\n\ndef query(wav_path: str, db_path: str, min_confidence: int = 5):\n    return ("no_match", 0)\n' or 'sqlite3' in 'def build_database(wav_dir: str, db_path: str):\n    pass\n\ndef query(wav_path: str, db_path: str, min_confidence: int = 5):\n    return ("no_match", 0)\n' or 'wavfile' in 'def build_database(wav_dir: str, db_path: str):\n    pass\n\ndef query(wav_path: str, db_path: str, min_confidence: int = 5):\n    return ("no_match", 0)\n')
+____________ TestConstraints.test_req78_no_forbidden_module_imports ____________
+test_f2p.py:726: in test_req78_no_forbidden_module_imports
+    src = inspect.getsource(mod)
+          ^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/inspect.py:1278: in getsource
+    lines, lnum = getsourcelines(object)
+                  ^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/inspect.py:1260: in getsourcelines
+    lines, lnum = findsource(object)
+                  ^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/inspect.py:1089: in findsource
+    raise OSError('could not get source code')
+E   OSError: could not get source code
+=========================== short test summary info ============================
+FAILED test_f2p.py::TestFileStructure::test_main_module_importable - Assertio...
+FAILED test_f2p.py::TestPeakDetection::test_req8_9_multiplicative_threshold_only
+FAILED test_f2p.py::TestFunctionSignatures::test_req21_build_database_signature
+FAILED test_f2p.py::TestFunctionSignatures::test_req22_query_signature - asse...
+FAILED test_f2p.py::TestFunctionSignatures::test_req23_test_mode_signature - ...
+FAILED test_f2p.py::TestFunctionSignatures::test_req24_params_flow_through_calls
+FAILED test_f2p.py::TestBuildDatabase::test_req25_iterates_all_wav_files - sq...
+FAILED test_f2p.py::TestBuildDatabase::test_req26_calls_fingerprint_per_file
+FAILED test_f2p.py::TestBuildDatabase::test_req27_song_name_is_stem_without_extension
+FAILED test_f2p.py::TestBuildDatabase::test_req28_delete_before_insert_idempotency
+FAILED test_f2p.py::TestBuildDatabase::test_req29_table_schema_exact - Assert...
+FAILED test_f2p.py::TestBuildDatabase::test_req30_index_exists - AssertionErr...
+FAILED test_f2p.py::TestBuildDatabase::test_req31_index_created_before_insert
+FAILED test_f2p.py::TestBuildDatabase::test_req32_inserts_hash_offset_song_name_triples
+FAILED test_f2p.py::TestQuery::test_req34_query_uses_hash_index - AssertionEr...
+FAILED test_f2p.py::TestQuery::test_req35_36_37_offset_diff_and_grouping - As...
+FAILED test_f2p.py::TestQuery::test_req38_returns_result_only_when_above_min_confidence
+FAILED test_f2p.py::TestTestMode::test_req45_adds_gaussian_noise_20db_snr - A...
+FAILED test_f2p.py::TestTestMode::test_req48_matches_base_filename - Assertio...
+FAILED test_f2p.py::TestCLI::test_req49_invokable_as_module - AttributeError:...
+FAILED test_f2p.py::TestCLI::test_req50_three_subcommands_exist - ImportError...
+FAILED test_f2p.py::TestCLI::test_req51_52_53_build_subcommand - ImportError:...
+FAILED test_f2p.py::TestCLI::test_req54_55_56_57_query_subcommand_match - Imp...
+FAILED test_f2p.py::TestCLI::test_req57_query_no_match_prints_no_match_found
+FAILED test_f2p.py::TestCLI::test_req58_59_60_test_subcommand_pass - ImportEr...
+FAILED test_f2p.py::TestCLI::test_req61_test_subcommand_fail - ImportError: c...
+FAILED test_f2p.py::TestGenerateSamples::test_req63_no_network_download - Ass...
+FAILED test_f2p.py::TestGenerateSamples::test_req64_exactly_two_wav_files - F...
+FAILED test_f2p.py::TestGenerateSamples::test_req65_each_file_exactly_30_seconds
+FAILED test_f2p.py::TestGenerateSamples::test_req66_sample_rate_44100 - FileN...
+FAILED test_f2p.py::TestGenerateSamples::test_req67_68_five_chirp_components
+FAILED test_f2p.py::TestGenerateSamples::test_req69_70_no_shared_start_end_frequencies
+FAILED test_f2p.py::TestGenerateSamples::test_req71_frequencies_in_range_200_8000
+FAILED test_f2p.py::TestGenerateSamples::test_req72_non_overlapping_frequency_ranges
+FAILED test_f2p.py::TestGenerateSamples::test_req73_at_least_200_distinct_hashes
+FAILED test_f2p.py::TestGenerateSamples::test_req74_no_external_download - As...
+FAILED test_f2p.py::TestConstraints::test_req75_uses_sqlite3_directly - asser...
+FAILED test_f2p.py::TestConstraints::test_req76_filesystem_io_only - assert (...
+FAILED test_f2p.py::TestConstraints::test_req78_no_forbidden_module_imports
+======================== 39 failed, 32 passed in 2.00s =========================

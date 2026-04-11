@@ -1,0 +1,288 @@
+{
+  "tests": [
+    {
+      "name": "TestFileStructure::test_fingerprint_module_importable",
+      "status": "PASSED"
+    },
+    {
+      "name": "TestFileStructure::test_database_module_importable",
+      "status": "PASSED"
+    },
+    {
+      "name": "TestFileStructure::test_matcher_module_importable",
+      "status": "PASSED"
+    },
+    {
+      "name": "TestFileStructure::test_main_module_importable",
+      "status": "FAILED"
+    },
+    {
+      "name": "TestFileStructure::test_generate_samples_importable",
+      "status": "PASSED"
+    },
+    {
+      "name": "TestFingerprintLoader::test_req2_loads_wav_via_scipy",
+      "status": "PASSED"
+    },
+    {
+      "name": "TestFingerprintLoader::test_req3_stereo_converted_to_mono",
+      "status": "PASSED"
+    },
+    {
+      "name": "TestFingerprintLoader::test_req4_normalised_to_float64",
+      "status": "PASSED"
+    },
+    {
+      "name": "TestFingerprintLoader::test_req5_stft_used_hann_window",
+      "status": "PASSED"
+    },
+    {
+      "name": "TestFingerprintDefaults::test_req6_default_window_size_4096",
+      "status": "PASSED"
+    },
+    {
+      "name": "TestFingerprintDefaults::test_req7_default_hop_length_2048",
+      "status": "PASSED"
+    },
+    {
+      "name": "TestFingerprintDefaults::test_req10_default_threshold_factor_2",
+      "status": "PASSED"
+    },
+    {
+      "name": "TestFingerprintDefaults::test_req16_default_fan_out_time_10",
+      "status": "PASSED"
+    },
+    {
+      "name": "TestPeakDetection::test_req8_9_multiplicative_threshold_only",
+      "status": "FAILED"
+    },
+    {
+      "name": "TestPeakDetection::test_req12_local_maxima_strictly_greater_than_neighbors",
+      "status": "PASSED"
+    },
+    {
+      "name": "TestPeakDetection::test_req13_14_boundary_bins_excluded",
+      "status": "PASSED"
+    },
+    {
+      "name": "TestPeakDetection::test_req15_fan_out_time_bounds_pairing",
+      "status": "PASSED"
+    },
+    {
+      "name": "TestHashFormat::test_req17_bit_packing_formula",
+      "status": "PASSED"
+    },
+    {
+      "name": "TestHashFormat::test_req17_hash_fits_in_36_bits",
+      "status": "PASSED"
+    },
+    {
+      "name": "TestHashFormat::test_req18_returns_list_of_tuples",
+      "status": "PASSED"
+    },
+    {
+      "name": "TestHashFormat::test_req19_time_offset_is_frame_index",
+      "status": "PASSED"
+    },
+    {
+      "name": "TestHashFormat::test_req20_empty_list_if_no_peaks",
+      "status": "PASSED"
+    },
+    {
+      "name": "TestFunctionSignatures::test_req21_build_database_signature",
+      "status": "FAILED"
+    },
+    {
+      "name": "TestFunctionSignatures::test_req22_query_signature",
+      "status": "FAILED"
+    },
+    {
+      "name": "TestFunctionSignatures::test_req23_test_mode_signature",
+      "status": "FAILED"
+    },
+    {
+      "name": "TestFunctionSignatures::test_req24_params_flow_through_calls",
+      "status": "FAILED"
+    },
+    {
+      "name": "TestBuildDatabase::test_req25_iterates_all_wav_files",
+      "status": "FAILED"
+    },
+    {
+      "name": "TestBuildDatabase::test_req26_calls_fingerprint_per_file",
+      "status": "FAILED"
+    },
+    {
+      "name": "TestBuildDatabase::test_req27_song_name_is_stem_without_extension",
+      "status": "FAILED"
+    },
+    {
+      "name": "TestBuildDatabase::test_req28_delete_before_insert_idempotency",
+      "status": "FAILED"
+    },
+    {
+      "name": "TestBuildDatabase::test_req29_table_schema_exact",
+      "status": "FAILED"
+    },
+    {
+      "name": "TestBuildDatabase::test_req30_index_exists",
+      "status": "FAILED"
+    },
+    {
+      "name": "TestBuildDatabase::test_req31_index_created_before_insert",
+      "status": "FAILED"
+    },
+    {
+      "name": "TestBuildDatabase::test_req32_inserts_hash_offset_song_name_triples",
+      "status": "FAILED"
+    },
+    {
+      "name": "TestQuery::test_req33_query_fingerprints_input",
+      "status": "PASSED"
+    },
+    {
+      "name": "TestQuery::test_req34_query_uses_hash_index",
+      "status": "FAILED"
+    },
+    {
+      "name": "TestQuery::test_req35_36_37_offset_diff_and_grouping",
+      "status": "FAILED"
+    },
+    {
+      "name": "TestQuery::test_req38_returns_result_only_when_above_min_confidence",
+      "status": "FAILED"
+    },
+    {
+      "name": "TestQuery::test_req39_no_match_case_a_zero_hashes",
+      "status": "PASSED"
+    },
+    {
+      "name": "TestQuery::test_req40_no_match_case_b_below_min_confidence",
+      "status": "PASSED"
+    },
+    {
+      "name": "TestQuery::test_req39_no_match_returns_tuple_not_none",
+      "status": "PASSED"
+    },
+    {
+      "name": "TestTestMode::test_req41_test_mode_loads_wav",
+      "status": "PASSED"
+    },
+    {
+      "name": "TestTestMode::test_req42_fixed_seed_42",
+      "status": "PASSED"
+    },
+    {
+      "name": "TestTestMode::test_req43_extracts_10_second_segment",
+      "status": "PASSED"
+    },
+    {
+      "name": "TestTestMode::test_req44_uses_full_clip_if_shorter_than_10s",
+      "status": "PASSED"
+    },
+    {
+      "name": "TestTestMode::test_req45_adds_gaussian_noise_20db_snr",
+      "status": "FAILED"
+    },
+    {
+      "name": "TestTestMode::test_req46_uses_tempfile",
+      "status": "PASSED"
+    },
+    {
+      "name": "TestTestMode::test_req47_calls_query_internally",
+      "status": "PASSED"
+    },
+    {
+      "name": "TestTestMode::test_req48_matches_base_filename",
+      "status": "FAILED"
+    },
+    {
+      "name": "TestCLI::test_req49_invokable_as_module",
+      "status": "FAILED"
+    },
+    {
+      "name": "TestCLI::test_req50_three_subcommands_exist",
+      "status": "FAILED"
+    },
+    {
+      "name": "TestCLI::test_req51_52_53_build_subcommand",
+      "status": "FAILED"
+    },
+    {
+      "name": "TestCLI::test_req54_55_56_57_query_subcommand_match",
+      "status": "FAILED"
+    },
+    {
+      "name": "TestCLI::test_req57_query_no_match_prints_no_match_found",
+      "status": "FAILED"
+    },
+    {
+      "name": "TestCLI::test_req58_59_60_test_subcommand_pass",
+      "status": "FAILED"
+    },
+    {
+      "name": "TestCLI::test_req61_test_subcommand_fail",
+      "status": "FAILED"
+    },
+    {
+      "name": "TestGenerateSamples::test_req62_generate_samples_function_signature",
+      "status": "PASSED"
+    },
+    {
+      "name": "TestGenerateSamples::test_req63_no_network_download",
+      "status": "FAILED"
+    },
+    {
+      "name": "TestGenerateSamples::test_req64_exactly_two_wav_files",
+      "status": "FAILED"
+    },
+    {
+      "name": "TestGenerateSamples::test_req65_each_file_exactly_30_seconds",
+      "status": "FAILED"
+    },
+    {
+      "name": "TestGenerateSamples::test_req66_sample_rate_44100",
+      "status": "FAILED"
+    },
+    {
+      "name": "TestGenerateSamples::test_req67_68_five_chirp_components",
+      "status": "FAILED"
+    },
+    {
+      "name": "TestGenerateSamples::test_req69_70_no_shared_start_end_frequencies",
+      "status": "FAILED"
+    },
+    {
+      "name": "TestGenerateSamples::test_req71_frequencies_in_range_200_8000",
+      "status": "FAILED"
+    },
+    {
+      "name": "TestGenerateSamples::test_req72_non_overlapping_frequency_ranges",
+      "status": "FAILED"
+    },
+    {
+      "name": "TestGenerateSamples::test_req73_at_least_200_distinct_hashes",
+      "status": "FAILED"
+    },
+    {
+      "name": "TestGenerateSamples::test_req74_no_external_download",
+      "status": "FAILED"
+    },
+    {
+      "name": "TestConstraints::test_req75_uses_sqlite3_directly",
+      "status": "FAILED"
+    },
+    {
+      "name": "TestConstraints::test_req76_filesystem_io_only",
+      "status": "FAILED"
+    },
+    {
+      "name": "TestConstraints::test_req77_no_listening_sockets",
+      "status": "PASSED"
+    },
+    {
+      "name": "TestConstraints::test_req78_no_forbidden_module_imports",
+      "status": "FAILED"
+    }
+  ]
+}

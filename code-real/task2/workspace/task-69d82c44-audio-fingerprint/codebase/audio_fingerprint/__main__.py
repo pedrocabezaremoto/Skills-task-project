@@ -1,33 +1,46 @@
 import sys
 import argparse
+from audio_fingerprint.database import build_database, query
+from audio_fingerprint.matcher import test_mode
 
 def main():
     parser = argparse.ArgumentParser(prog="audio_fingerprint")
-    subparsers = parser.add_subparsers(dest="command")
+    subparsers = parser.add_subparsers(dest="command", help="Subcommand to run")
     
-    # build
+    # build --dir <wav_dir> --db <db_path>
     build_parser = subparsers.add_parser("build")
-    build_parser.add_argument("--dir", required=True)
-    build_parser.add_argument("--db", required=True)
+    build_parser.add_argument("--dir", required=True, help="Directory containing WAV files")
+    build_parser.add_argument("--db", required=True, help="Path to SQLite database")
     
-    # query
+    # query --clip <wav_path> --db <db_path>
     query_parser = subparsers.add_parser("query")
-    query_parser.add_argument("--clip", required=True)
-    query_parser.add_argument("--db", required=True)
+    query_parser.add_argument("--clip", required=True, help="Path to audio clip")
+    query_parser.add_argument("--db", required=True, help="Path to SQLite database")
     
-    # test
+    # test --file <wav_path> --db <db_path>
     test_parser = subparsers.add_parser("test")
-    test_parser.add_argument("--file", required=True)
-    test_parser.add_argument("--db", required=True)
+    test_parser.add_argument("--file", required=True, help="Path to audio file for test")
+    test_parser.add_argument("--db", required=True, help="Path to SQLite database")
     
     args = parser.parse_args()
     
     if args.command == "build":
-        print("BUILD FAILED") # Should be BUILD COMPLETE in golden patch
+        build_database(args.dir, args.db)
+        print("BUILD COMPLETE")
     elif args.command == "query":
-        print("No match found")
+        song_name, confidence = query(args.clip, args.db)
+        if song_name != "no_match":
+            print(f"Match: {song_name} (confidence: {confidence})")
+        else:
+            print("No match found")
     elif args.command == "test":
-        print("FAIL")
+        success = test_mode(args.file, args.db)
+        if success:
+            print("PASS")
+        else:
+            print("FAIL")
+    else:
+        parser.print_help()
 
 if __name__ == "__main__":
     main()

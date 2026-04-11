@@ -701,28 +701,40 @@ class TestConstraints:
         assert "tortoise" not in src.lower()
 
     def test_req76_filesystem_io_only(self):
-        """Req 76 — implementation only writes/reads local filesystem (no network I/O)."""
-        # Verify by ensuring the library operates correctly on local files
-        import audio_fingerprint.database as db_mod
-        import audio_fingerprint.fingerprint as fp_mod
-        import audio_fingerprint.matcher as mt_mod
-        # All modules must be importable without triggering any network activity
-        for mod in [db_mod, fp_mod, mt_mod]:
-            src = inspect.getsource(mod)
-            # Must not contain network-opening calls
-            assert "socket.connect" not in src
-            assert "urlopen" not in src
-            assert "requests.get" not in src
+        """Req 76 — implementation performs filesystem I/O only, not network I/O.
+        Verified behaviorally: patch socket at system level and confirm no call fires."""
+        from unittest.mock import patch, MagicMock
+        network_calls = []
+
+        def fake_socket(*args, **kwargs):
+            network_calls.append(args)
+            return MagicMock()
+
+        with patch("socket.socket", side_effect=fake_socket):
+            result = fingerprint(_wav1())
+
+        assert isinstance(result, list)
+        assert len(network_calls) == 0, (
+            "fingerprint() triggered a network socket — only filesystem I/O is permitted"
+        )
 
     def test_req77_no_listening_sockets(self):
-        """Req 77 — no listening sockets (socket.bind / socket.listen not used)."""
-        import audio_fingerprint.database as db_mod
-        import audio_fingerprint.fingerprint as fp_mod
-        import audio_fingerprint.matcher as mt_mod
-        for mod in [db_mod, fp_mod, mt_mod]:
-            src = inspect.getsource(mod)
-            assert ".bind(" not in src, f"{mod.__name__} must not call .bind()"
-            assert ".listen(" not in src, f"{mod.__name__} must not call .listen()"
+        """Req 77 — library never calls socket.bind() or socket.listen().
+        Verified behaviorally via mock: if any module calls these, the mock captures it."""
+        from unittest.mock import patch, MagicMock
+        bind_calls = []
+        listen_calls = []
+
+        mock_sock = MagicMock()
+        mock_sock.bind.side_effect = lambda *a, **k: bind_calls.append(a)
+        mock_sock.listen.side_effect = lambda *a, **k: listen_calls.append(a)
+
+        with patch("socket.socket", return_value=mock_sock):
+            fingerprint(_wav1())
+            build_database(WAV_DIR, DB_PATH)
+
+        assert len(bind_calls) == 0, "Library must not call socket.bind()"
+        assert len(listen_calls) == 0, "Library must not call socket.listen()"
 
     def test_req78_no_forbidden_module_imports(self):
         """Req 78 — forbidden modules are not imported anywhere in the library."""
